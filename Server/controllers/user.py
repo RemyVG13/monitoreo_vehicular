@@ -44,13 +44,7 @@ async def verify_idnumber(idnumber: int,idzone: str) -> dict:
         return  {"response": False, "detail": "ID Number already exists"}
     return {"response": True, "detail": "Ok"}
 
-async def verify_email(email) -> dict:
-    if email != None:
-        userFound = await connection.users.find_one({"email":email})
-        if userFound != None:
-            return  {"response": False, "detail": "Email already exists"}
-    else:
-        return {"response": True, "detail": "Ok"}
+
 
 def verify_rol(rol: str) -> dict:
     values = [member.value for member in Roles]
@@ -123,12 +117,6 @@ async def validate_user(user: User):
             detail = vrf["detail"]
         )
     
-    vrf = await verify_email(dict_user["email"])
-    if (not vrf["response"]):
-        raise HTTPException(
-            status_code = 403, 
-            detail = vrf["detail"]
-        )
     
     vrf = verify_rol(dict_user["rol"])
     if (not vrf["response"]):
@@ -175,8 +163,6 @@ async def validate_update_user(id: str,update_user:UpdateUser):
                         vrf = await verify_idnumber(value,dict_user["id_zone"])
                     else:
                         vrf = await verify_idnumber(value,actual_user["id_zone"])  
-                case "email":
-                    vrf = await verify_email(value)
                 case "rol":
                     vrf = await verify_rol(value)
                 case "birthday_date_inseconds":

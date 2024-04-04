@@ -3,7 +3,7 @@ def carEntity(item) -> dict:
         "id": str(item["_id"]),
         "plate": item["plate"],
         "make": item["make"],
-        "mode": item["mode"],
+        "model": item["model"],
         "year": item["year"],
         "disabled": item["disabled"],
         "creation_date_inseconds": item["creation_date_inseconds"],
@@ -11,6 +11,8 @@ def carEntity(item) -> dict:
         "history_element": item["history_element"],
         "deleted": item["deleted"],
     }
+    print("RETURNED???????????????????????????????????")
+    print(entity)
     return entity
 
 def carsEntity(entity) -> list:

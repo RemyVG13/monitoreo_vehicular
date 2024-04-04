@@ -87,7 +87,21 @@ async def check_car_conflict(existing_schedule: dict, updated_schedule: dict) ->
             return  {"response": False, "detail": f'There is a existing schedule for this car'}
     return {"response": True, "detail": f'Ok'}
 
+async def check_schedule_conflict(schedule: dict):
+    # Buscar otros Schedule con el mismo car_id, day y hour
+    conflicting_schedules = await connection.schedules.find({
+        "car_id": schedule["car_id"],
+        "day": schedule["day"],
+        "hour": schedule["hour"]
+    }).to_list(None)
 
+    # Verificar si hay conflictos con otros teacher
+    for conflicting_schedule in conflicting_schedules:
+        if conflicting_schedule["teacher_id"] == schedule["teacher_id"]:
+            # Encontrado conflicto con otro teacher
+            return  {"response": False, "detail": f'There is a existing schedule for this parameters'}
+    # No hay coflictos
+    return {"response": True, "detail": f'Ok'}
 
 
 #CRUD functions
@@ -114,7 +128,13 @@ async def create_schedule_controller(schedule : Schedule, userLogged : User ):
             status_code = 403, 
             detail = vrf["detail"]
         )
-
+    
+    vrf = await check_schedule_conflict(dict_schedule)
+    if (not vrf["response"]):
+        raise HTTPException(
+            status_code = 403, 
+            detail = vrf["detail"]
+        )
     dict_schedule["creation_date_inseconds"] = bolivia_datetime_seconds()
     dict_schedule["creator_id"] = str(userLogged.id)
         

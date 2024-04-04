@@ -16,6 +16,7 @@ from fastapi.security import (
 )
 from typing import Annotated
 from routes.authentication import get_user_disabled_current
+import requests
 # from controllers.cardata import (
 #     create_cardata_controller,
 #     get_all_cardatas_controller,
@@ -27,41 +28,33 @@ from routes.authentication import get_user_disabled_current
 
 cardata = APIRouter(prefix="/cardatas", tags=["CarData"])
 oauth2_scheme = OAuth2PasswordBearer("/login")
-
-import requests
-
-
-
 # @cardata.get('/', response_model=list[CarData])
 #async def get_all_cardatas(amount: int, userLogged: User = Depends(get_user_disabled_current)):
 @cardata.get('/')
-async def get_all_cardatas(amount: int, userLogged: User = Depends(get_user_disabled_current)):
-    
-    # The API endpoint
-    url = "https://api.thingspeak.com/channels/2425622/feeds.json"
-
-    # GET POST https://api.thingspeak.com/update?api_key=E43NHEZK74CHN9HG&field1=13&field3=-17.396740&field2=-66.317620&field4=15
-    # GET all channel https://api.thingspeak.com/channels/2425622/feeds.json?results=0
-
-    # Adding a payload
+async def get_all_cardatas(amount: int, vehicle_id: int,userLogged: User = Depends(get_user_disabled_current)):
+    url = f'https://api.thingspeak.com/channels/{vehicle_id}/feeds.json'
     payload = {"results":amount}
-
-    # A get request to the API
     response = requests.get(url, params=payload)
 
-    # Print the response
     response_json = response.json()
-    print(response_json["feeds"])
+    #print(response_json["feeds"])
+    cardata_list = []
     for i in response_json["feeds"]:
+        data = {
+            "date": i["created_at"],
+            "fuel": i["field1"],
+            "latitude": i["field3"],
+            "longitude": i["field2"],
+            "speed": i["field4"],
+        }
         print("---")
-        # print(i, "\n")created_at
         print(f'Fecha: {i["created_at"]}', "\n")
         print(f'Combustible: {i["field1"]} L', "\n")
         print(f'Latitud: {i["field3"]}', "\n")
         print(f'Longitud: {i["field2"]}', "\n")
         print(f'Velocidad: {i["field4"]} Km/h', "\n")
-
-    return {"response":"test"}
+        cardata_list.append(data)
+    return cardata_list
     #cardatas = await get_all_cardatas_controller(userLogged)
     #return cardatasEntity(cardatas)
 

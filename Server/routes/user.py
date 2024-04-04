@@ -25,7 +25,7 @@ async def find_all_users(userLogged: User = Depends(get_user_disabled_current)):
     return Response(status_code=HTTP_200_OK, content=usersEntity(users))
 
 @user.post('/user')
-async def create_user(user: User = Depends(get_user_disabled_current)):
+async def create_user(user: User):
     dict_user = dict(user)
     dict_user["password"] = password_context.hash(dict_user["password"])
     res = await connection.users.insert_one(dict_user)

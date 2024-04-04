@@ -14,9 +14,9 @@ async def verify_car_id(id: str):
         return  {"response": False, "detail": "Car does not exist"}
     return {"response": True, "detail": "Ok"}
 
-async def verify_plate(id: str):
-    res_id = await connection.cars.find_one({"_id":ObjectId(id)})
-    if res_id == None:
+async def verify_plate(plate: str):
+    res = await connection.cars.find_one({"plate":plate})
+    if res != None:
         return  {"response": False, "detail": "Car plate already exist"}
     return {"response": True, "detail": "Ok"}
 
