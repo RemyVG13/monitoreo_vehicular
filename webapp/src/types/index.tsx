@@ -8,5 +8,4 @@ export interface CarData {
     speed: string;
   }
   
-const [data, setData] = useState<CarData[]>([]);
   
