@@ -70,19 +70,19 @@ def verify_birthday(birthday: int):
 
 async def validate_user(user: User):
     dict_user = dict(user)
-    vrf = await verify_username(dict_user["username"])
-    if (not vrf["response"]):
-        raise HTTPException(
-            status_code = 403, 
-            detail = vrf["detail"]
-        )
+    # vrf = await verify_username(dict_user["username"])
+    # if (not vrf["response"]):
+    #     raise HTTPException(
+    #         status_code = 403, 
+    #         detail = vrf["detail"]
+    #     )
     
-    vrf = verify_password(dict_user["password"])
-    if (not vrf["response"]):
-        raise HTTPException(
-            status_code = 403, 
-            detail = vrf["detail"]
-        )
+    # vrf = verify_password(dict_user["password"])
+    # if (not vrf["response"]):
+    #     raise HTTPException(
+    #         status_code = 403, 
+    #         detail = vrf["detail"]
+    #     )
     
     vrf = verify_names(dict_user["first_name"])
     if (not vrf["response"]):
@@ -134,10 +134,11 @@ async def validate_user(user: User):
 
 async def validate_update_user(id: str,update_user:UpdateUser):
     actual_user = await connection.users.find_one({"_id": ObjectId(id)})
-
+    print(update_user)
     dict_user = dict(update_user)
     vrf = {}
     new_user = {}
+    print(dict_user)
     for key, value in dict_user.items():
         if (value != None):
             match key:
@@ -152,21 +153,23 @@ async def validate_update_user(id: str,update_user:UpdateUser):
                 case "mother_last_name":
                     vrf = verify_names(value)
                 case "id_zone":
-                    if(dict_user["id_number"] != None):
-                        vrf = await verify_idnumber(dict_user["id_number"],value)
+                    if(dict_user["id_number"] != None ):
+                        if (dict_user["id_number"] != actual_user["id_number"]):
+                            vrf = await verify_idnumber(dict_user["id_number"],value)
                     else:
                         vrf = verify_idzone(value)
                         if(vrf["response"]):
                             vrf = await verify_idnumber(actual_user["id_number"],value)
                 case "id_number":
                     if(dict_user["id_zone"] != None):
-                        vrf = await verify_idnumber(value,dict_user["id_zone"])
+                        if (dict_user["id_number"] != actual_user["id_number"]):
+                            vrf = await verify_idnumber(value,dict_user["id_zone"])
                     else:
                         vrf = await verify_idnumber(value,actual_user["id_zone"])  
                 case "rol":
-                    vrf = await verify_rol(value)
+                    vrf = verify_rol(value)
                 case "birthday_date_inseconds":
-                    vrf = await verify_birthday(value)
+                    vrf = verify_birthday(value)
                     
             if (not vrf["response"]):
                 raise HTTPException(

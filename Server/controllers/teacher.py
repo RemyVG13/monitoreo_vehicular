@@ -9,6 +9,8 @@ from controllers.user import (
     validate_user,
     validate_update_user
 )
+from bson.regex import Regex
+
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto") 
 
@@ -31,8 +33,11 @@ def verify_getter_rol(getter: User):
 async def verify_getter_teacher(id: str, getter: Teacher):
     teacher_found = await connection.users.find_one({"_id": ObjectId(id)})
     getter_response = verify_getter_rol(getter)
+    '''
     if ((teacher_found["username"] != getter.username) and not (getter_response["response"])):
         return  {"response": False, "detail": f'User {getter.first_name} does not have enough privileges'}
+    '''
+    
     return {"response": True, "detail": "Ok"}
 
 async def create_teacher_controller(teacher : Teacher, userLogged : User ):
@@ -46,7 +51,7 @@ async def create_teacher_controller(teacher : Teacher, userLogged : User ):
             detail = vrf["detail"]
         )
             
-    dict_user["password"] = password_context.hash(dict_user["password"])
+    dict_user["password"] = ""
     dict_user["creation_date_inseconds"] = bolivia_datetime_seconds()
     dict_user["rol"] = Roles.TEACHER.value
     dict_user["creator_id"] = str(userLogged.id)
@@ -56,18 +61,60 @@ async def create_teacher_controller(teacher : Teacher, userLogged : User ):
     userdb = await connection.users.find_one({"_id": id})
     return userdb
 
-async def get_all_teachers_controller(userLogged: User):
+async def get_all_teachers_controller(userLogged: User,search:str):
     vrf = verify_getter_rol(userLogged)    
     if (not vrf["response"]):
         raise HTTPException(
             status_code = 403,
             detail = vrf["detail"]
         )
-    teachers_async = connection.users.find({"rol":Roles.TEACHER.value}).sort("father_last_name")
+    #teachers_async = connection.users.find({"rol":Roles.TEACHER.value}).sort("father_last_name")
+    #teachers = []
+    
+    search_regex = Regex(search, "i")  # Expresión regular para buscar parcialmente en strings
+
+    # Pipeline de agregación para buscar en múltiples campos, incluyendo la conversión de números a string
+    pipeline = [
+        {
+            "$match": {
+                "rol": Roles.TEACHER.value
+            }
+        },
+        {
+            "$addFields": {
+                "id_number_str": {"$toString": "$id_number"},  # Convertir 'id_number' a string
+                "birthday_date_inseconds_str": {"$toString": "$birthday_date_inseconds"}  # Opcional: convertir otros campos numéricos si es necesario
+            }
+        },
+        {
+            "$match": {
+                "$or": [
+                    {"first_name": search_regex},
+                    {"father_last_name": search_regex},
+                    {"mother_last_name": search_regex},
+                    {"id_zone": search_regex},
+                    {"id_number_str": search_regex},
+                    {"birthday_date_inseconds_str": search_regex}
+                ]
+            }
+        },
+        {
+            "$sort": {"father_last_name": 1}
+        }
+    ]
+
+    # Ejecutar el pipeline de agregación de manera asincrónica y recopilar los resultados
     teachers = []
-    async for document in teachers_async:
-        teachers.append(document)
+    if search != "":
+        async for document in connection.users.aggregate(pipeline):
+            teachers.append(document)
+    else:
+        teachers_async = connection.users.find({"rol":Roles.TEACHER.value}).sort("father_last_name")
+        async for document in teachers_async:
+            teachers.append(document)
+
     return teachers
+
     
 async def get_teacher_controller(id: str,userLogged: User):
     vrf = await verify_teacher_id(id)    
@@ -76,13 +123,15 @@ async def get_teacher_controller(id: str,userLogged: User):
             status_code = 403, 
             detail = vrf["detail"]
         )
-    
+    '''
     vrf = await verify_getter_teacher(id,userLogged) 
     if (not vrf["response"]):
         raise HTTPException(
             status_code = 403, 
             detail = vrf["detail"]
         )
+    '''
+    
     
     return await connection.users.find_one({"_id": ObjectId(id)})
 
@@ -114,9 +163,11 @@ async def update_teacher_controller(id: str,teacher: UpdateTeacher, userLogged: 
             status_code = 403, 
             detail = "Creator can not bet modified"
         )
-
+    '''
     if("password" in dict_teacher):
         dict_teacher["password"] = password_context.hash(dict_teacher["password"])
+    '''
+    
     if("rol" in dict_teacher):
         dict_teacher["rol"] = Roles.TEACHER.value
 
@@ -126,6 +177,7 @@ async def update_teacher_controller(id: str,teacher: UpdateTeacher, userLogged: 
     return await connection.users.find_one({"_id": ObjectId(id)})
 
 async def delete_teacher_controller(id: str,userLogged: User):
+    print("delete_teacher_controller => Start")
     vrf = await verify_teacher_id(id)    
     if (not vrf["response"]):
         raise HTTPException(

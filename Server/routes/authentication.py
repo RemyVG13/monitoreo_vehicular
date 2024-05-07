@@ -38,18 +38,21 @@ async def get_user_current(token: str = Depends(oauth2_scheme)):
         username = token_decode.get("sub")
         rol = token_decode.get("rol")
         if username == None:
+            print("get_user_current => No username")
             raise HTTPException(
                 status_code=401, 
                 detail="Could not validate credentials",
                 headers={"WWW-Authenticate": "Bearer"}
             )
         if rol == None:
+            print("get_user_current => No password")
             raise HTTPException(
                 status_code=401, 
                 detail="Could not validate credentials",
                 headers={"WWW-Authenticate": "Bearer"}
             )
     except JWTError:
+        print("get_user_current => JWTError")
         raise HTTPException(
             status_code=401, 
             detail="Could not validate credentials",
@@ -58,6 +61,7 @@ async def get_user_current(token: str = Depends(oauth2_scheme)):
     
     user = await get_user(username)
     if not user:
+        print("get_user_current => No User")
         raise HTTPException(
             status_code=401, 
             detail="Could not validate credentials",
@@ -92,10 +96,12 @@ async def verify_password(plane_password, hashed_password):
 async def authenticate_user(username, password):
     user = await get_user(username)
     if not user:
+        print("authenticate_user => No User")
         raise HTTPException(status_code=401, detail="Could not validate credentials",
                             headers={"WWW-Authenticate": "Bearer"}
                             )
     if not await verify_password(password,user.password):
+         print("authenticate_user => No password")
          raise HTTPException(status_code=401, detail="Could not validate credentials",
                             headers={"WWW-Authenticate": "Bearer"}
                             )       

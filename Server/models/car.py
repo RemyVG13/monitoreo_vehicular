@@ -7,6 +7,7 @@ class Car(BaseContent):
     make: str
     model: str
     year: int
+    thingspeak_id: int
     class Config:  
         arbitrary_types_allowed=True
 
@@ -15,5 +16,6 @@ class UpdateCar(UpdateBaseContent):
     make: Union[str, None] = None
     model: Union[str, None] = None
     year: Union[int, None] = None
+    thingspeak_id: Union[int, None] = None
     class Config:  
         arbitrary_types_allowed=True

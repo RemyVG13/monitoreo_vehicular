@@ -1,5 +1,11 @@
 
 def userEntity(item) -> dict:
+    
+    if("username" not in item):
+        item["username"] = ""
+    if("password" not in item):
+        item["password"] = ""
+    print(item)
     entity = {
         "id": str(item["_id"]),
         "first_name": item["first_name"],

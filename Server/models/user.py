@@ -26,8 +26,6 @@ class User(BaseContent):
     mother_last_name: Union[str, None] = None
     id_number: Union[int, None] = None
     id_zone: Union[str, None] = None #Zones Class
-    username: str
-    password : str
     birthday_date_inseconds: Union[int, None] = None
     rol: Union[str, None] = None
 
@@ -37,8 +35,6 @@ class UpdateUser(UpdateBaseContent):
     mother_last_name: Union[str, None] = None
     id_number: Union[int, None] = None
     id_zone: Union[str, None] = None #Zones Class
-    username: Union[str, None] = None
-    password : Union[str, None] = None
     birthday_date_inseconds: Union[int, None] = None
     rol: Union[str, None] = None
 
@@ -49,6 +45,13 @@ class UpdateTeacher(UpdateUser):
     rol: Union[str, None] = Roles.TEACHER.value
     
 class Admin(User):
+    username: Union[str, None]
+    password : Union[str, None]
+    rol:str = Roles.ADMIN.value
+
+class Admin(User):
+    username: str
+    password : str
     rol:str = Roles.ADMIN.value
 
 class Superadmin(User):

@@ -28,8 +28,8 @@ teacher = APIRouter(prefix="/teachers", tags=["Teacher"])
 oauth2_scheme = OAuth2PasswordBearer("/login")
 
 @teacher.get('/', response_model=list[Teacher])
-async def get_all_teachers(userLogged: User = Depends(get_user_disabled_current)):
-    teachers = await get_all_teachers_controller(userLogged)
+async def get_all_teachers(userLogged: User = Depends(get_user_disabled_current),search: str=""):
+    teachers = await get_all_teachers_controller(userLogged,search)
     return usersEntity(teachers)
 
 @teacher.post('/', response_model=Teacher)
@@ -49,6 +49,7 @@ async def update_teacher(id: str, update_teacher: UpdateTeacher,userLogged: User
 
 @teacher.delete('/{id}')
 async def delete_teacher(id: str, userLogged: User = Depends(get_user_disabled_current)):
+    print("delete_teacher")
     await delete_teacher_controller(id,userLogged)
     return Response(status_code=HTTP_204_NO_CONTENT)
 
