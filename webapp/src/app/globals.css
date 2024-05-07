@@ -1,0 +1,197 @@
+.login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('/assets/carBackground.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #15ABFF80;
+    z-index: 1;
+}
+
+.content {
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    z-index: 2;
+    justify-content: center; /* Alinea horizontalmente al centro */
+    align-items: center; /* Alinea verticalmente al centro */
+}
+
+.logo, .login-form {
+    padding: 20px; /* Añade un poco de espacio alrededor */
+  }
+
+.logo {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+}
+
+.login-form {
+width: 100%;
+max-width: 400px; /* Limita el ancho del formulario para no ocupar toda la pantalla */
+}
+
+@media (min-width: 768px) {
+.content {
+    display: flex;
+    justify-content: space-between;
+}
+.logo {
+    display: block;
+    width: 40%;
+}
+.login-form {
+    width: 40%;
+}
+}
+
+@media (max-width: 767px) {
+.logo {
+    display: none; /* Oculta el logo en pantallas pequeñas */
+}
+}
+  
+@media (min-width: 768px) {
+    .content {
+      justify-content: space-around; /* Distribuye el espacio uniformemente */
+    }
+    .logo, .login-form {
+      margin: 0 30px; /* Aumenta el margen lateral para mover hacia el centro */
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .logo {
+      display: none; /* Oculta el logo en pantallas pequeñas */
+    }
+    .login-form {
+      width: 90%; /* Utiliza más espacio de pantalla para el formulario */
+    }
+  }
+
+
+
+
+  
+
+  @font-face {
+    font-family: 'Lexend';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/lexend/v19/wlptgwvFAVdoq2_F94zlCfv0bz1WCzsWzLhnepKu.woff2) format('woff2');
+    unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+  }
+  /* latin-ext */
+  @font-face {
+    font-family: 'Lexend';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/lexend/v19/wlptgwvFAVdoq2_F94zlCfv0bz1WCzsWzLlnepKu.woff2) format('woff2');
+    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* latin */
+  @font-face {
+    font-family: 'Lexend';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/lexend/v19/wlptgwvFAVdoq2_F94zlCfv0bz1WCzsWzLdneg.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  .column-head-text {
+    font-family: Lexend; /* Heading */
+    font-size: 14px; 
+    line-height: 22px; 
+    font-weight: 400; 
+    color: #565D6D; /* neutral-600 */
+  }
+
+  table th.text {
+    color: #565D6D; /* Asegúrate de que esto es lo que deseas */
+  }
+
+  .column-element-text {
+    position: absolute; 
+    top: 20.44px; 
+    left: 16px; 
+    font-family: Manrope; /* Body */
+    font-size: 14px; 
+    line-height: 22px; 
+    font-weight: 700; 
+    color: #171A1FFF; /* neutral-900 */
+  }
+  
+  
+
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700&display=swap');
+  body {
+    font-family: 'Manrope', sans-serif;
+  }
+
+  .table td {
+    font-family: 'Manrope', sans-serif; /* Asegúrate de importar Manrope si aún no está disponible */
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+    color: #171A1F; /* Color casi negro */
+  }
+  
+  .table td {
+    text-align: left; /* Alinea el texto a la izquierda */
+    vertical-align: middle; /* Alinea el texto verticalmente al centro */
+  }
+
+  .table td .delete-table-btn {
+    display: block; /* Alinea el botón a la derecha */
+    margin-left: auto; /* Alinea a la derecha dentro de la celda */
+    vertical-align: middle; /* Alineación vertical al centro */
+    border: none; /* Opcional: elimina bordes si es necesario */
+    background: none; /* Fondo transparente */
+
+  }
+
+  .table td {
+    padding-left: 20px; /* Aumenta el espacio desde el borde izquierdo */
+    padding-right: 20px; /* Aumenta el espacio desde el borde derecho */
+  }
+
+  .table th {
+    padding-left: 20px; /* Aumenta el espacio desde el borde izquierdo */
+    padding-right: 20px; /* Aumenta el espacio desde el borde derecho */
+  }
+
+  
+  .delete-table-btn {
+    background-color: transparent; /* Fondo transparente */
+    color: #6D31EDFF; /* Color morado, ajusta este valor al color exacto que utilizas en el botón de login */
+    border: none; /* Sin borde */
+    cursor: pointer; /* Cambia el cursor a una mano para indicar que es clickeable */
+  }
+  
+  .delete-table-btnr:hover {
+    text-decoration: underline; /* Opcional: subraya al pasar el mouse para indicar interactividad */
+  }
+
+  .table td {
+    transition: background-color 0.3s; /* Suaviza la transición del color de fondo */
+  }
+  
+  .table td:hover {
+    background-color: #f0f0f0; /* Cambia al color deseado cuando se hace hover */
+  }
+  

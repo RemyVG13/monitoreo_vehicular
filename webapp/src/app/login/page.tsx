@@ -1,12 +1,24 @@
 
 'use client';
-import LoginForm from '@/components/LoginForm';
+import LoginForm from '@/components/LoginForm'; // Asegúrate de que el path sea correcto
+import Image from 'next/image';
 
-export default function LoginPage() {
+const LoginPage = () => {
   return (
-    <div>
-      <h1>Iniciar Sesión</h1>
-      <LoginForm />
+    <div className="login-page">
+      <div className="overlay"></div> {/* Overlay para el color */}
+      <div className="content">
+        <div className="logo d-none d-md-block">
+          <Image src="/assets/logo.svg" alt="Logo del Instituto" width={500} height={500} />
+        </div>
+        <div className="login-form">
+          <LoginForm />
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default LoginPage;
+
+

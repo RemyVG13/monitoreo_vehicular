@@ -1,0 +1,33 @@
+'use client';
+import React from 'react'
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import { JWT } from '@/types';
+import CreateTeacher from '@/components/CreateTeacher';
+import { getAuthDetails } from '@/utils/authUtils';
+
+export default function CreateTeacherPage () {
+  const router = useRouter();
+  const { token, type } = getAuthDetails();
+  const validToken = token ?? '';
+  const validType = type ?? '';
+
+  // Función para volver a la lista de maestros
+  const backToTeachers = () => {
+    router.push('/dashboard/teachers');
+  };
+
+  return (
+    <div style={{ margin: '80px', paddingLeft:"40px",paddingRight:"40px", paddingBottom:"40px",paddingTop:"5px"}} className='bg-white'>
+      <CreateTeacher
+        backToTeachers={backToTeachers}
+        createToken={validToken}  // Reemplaza con el token real
+        createType={validType}  // Reemplaza con el tipo real
+      />
+    </div>
+  );
+}
+ 
+
+

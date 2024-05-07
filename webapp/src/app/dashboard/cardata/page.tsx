@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { fetchCarData } from '@/services/cardataService';
 import { getAuthDetails } from '@/utils/authUtils';
 import { CarData } from '@/types';
-
+import { JWT } from '@/types';
 const CarDataTable = () => {
   const [data, setData] = useState<CarData[]>([]);
   const [vehicleId, setVehicleId] = useState('');
@@ -11,6 +11,7 @@ const CarDataTable = () => {
   const { token, type } = getAuthDetails();
   const validToken = token ?? '';
   const validType = type ?? '';
+
   const handleSearch = async () => {
     if (!vehicleId || !amount) {
       alert('Por favor, complete ambos campos.');
@@ -18,6 +19,7 @@ const CarDataTable = () => {
     }
     try {
       const fetchedData = await fetchCarData(validToken, validType, parseInt(vehicleId), parseInt(amount));
+      //console.log(fetchedData);
       setData(fetchedData);
     } catch (error) {
       console.error(error);

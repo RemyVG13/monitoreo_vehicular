@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import './globals.css'
+//import '@/app/page.module.css';
+//import 'bootstrap/dist/css/bootstrap.min.css'; // Asegúrate de que el CSS de Bootstrap ya esté incluido.
+//import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Incluye los scripts de Bootstrap.
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,6 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className='relative'>
         {children}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossOrigin="anonymous"></script>
       </body>
     </html>
   );
