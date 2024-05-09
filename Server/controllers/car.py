@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from models.car import Car, UpdateCar
 from scripts.time import bolivia_datetime_seconds
 from bson import ObjectId
+from bson.regex import Regex
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto") 
 
@@ -75,11 +76,44 @@ async def create_car_controller(car : Car, userLogged : User ):
     cardb = await connection.cars.find_one({"_id": id})
     return cardb
 
-async def get_all_cars_controller(userLogged: User):
-    cars_async = connection.cars.find()
+
+async def get_all_cars_controller(userLogged: User,search:str):
+    search_regex = Regex(search, "i")  # Expresión regular para buscar parcialmente en strings
+
+    # Pipeline de agregación para buscar en múltiples campos, incluyendo la conversión de números a string
+    pipeline = [
+        {
+            "$addFields": {
+                "year_str": {"$toString": "$year"},  # Convertir 'id_number' a string
+                "thingspeak_id_str": {"$toString": "$thingspeak_id"}  # Opcional: convertir otros campos numéricos si es necesario
+            }
+        },
+        {
+            "$match": {
+                "$or": [
+                    {"name": search_regex},
+                    {"plate": search_regex},
+                    {"make": search_regex},
+                    {"model": search_regex},
+                    {"thingspeak_id_str": search_regex},
+                    {"year_str": search_regex}
+                ]
+            }
+        },
+        {
+            "$sort": {"name": 1}
+        }
+    ]
+    #cars_async = connection.cars.find()
     cars = []
-    async for document in cars_async:
-        cars.append(document)
+
+    if search != "":
+        async for document in connection.cars.aggregate(pipeline):
+            cars.append(document)
+    else:
+        cars_async = connection.cars.find().sort("name")
+        async for document in cars_async:
+            cars.append(document)
     return cars
     
 async def get_car_controller(id: str,userLogged: User):

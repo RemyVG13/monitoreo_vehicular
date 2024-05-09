@@ -29,8 +29,8 @@ car = APIRouter(prefix="/cars", tags=["Car"])
 oauth2_scheme = OAuth2PasswordBearer("/login")
 
 @car.get('/', response_model=list[Car])
-async def get_all_cars(userLogged: User = Depends(get_user_disabled_current)):
-    cars = await get_all_cars_controller(userLogged)
+async def get_all_cars(userLogged: User = Depends(get_user_disabled_current),search: str=""):
+    cars = await get_all_cars_controller(userLogged,search)
     return carsEntity(cars)
 
 @car.post('/', response_model=Car)
