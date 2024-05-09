@@ -1,9 +1,6 @@
 'use client';
 import React from 'react'
-import { useState } from 'react';
-import { useEffect } from 'react';
 import { useRouter } from "next/navigation";
-import { JWT } from '@/types';
 import CreateTeacher from '@/components/CreateTeacher';
 import { getAuthDetails } from '@/utils/authUtils';
 
@@ -22,8 +19,8 @@ export default function CreateTeacherPage () {
     <div style={{ margin: '80px', paddingLeft:"40px",paddingRight:"40px", paddingBottom:"40px",paddingTop:"5px"}} className='bg-white'>
       <CreateTeacher
         backToTeachers={backToTeachers}
-        createToken={validToken}  // Reemplaza con el token real
-        createType={validType}  // Reemplaza con el tipo real
+        createToken={validToken} 
+        createType={validType}  
       />
     </div>
   );

@@ -25,16 +25,23 @@ export interface Teacher extends BaseContentElement{
   birthday_date_inseconds: number;
   id_zone: string;
 }
-  /*
-  class UpdateUser(UpdateBaseContent):
-    first_name: Union[str, None] = None
-    father_last_name: Union[str, None] = None
-    mother_last_name: Union[str, None] = None
-    id_number: Union[int, None] = None
-    id_zone: Union[str, None] = None #Zones Class
-    birthday_date_inseconds: Union[int, None] = None
-    rol: Union[str, None] = None
-  */
+
+export interface Car extends BaseContentElement{
+  name: string;
+  plate: string;
+  make: string;
+  model: string;
+  year: number;
+  thingspeak_id: number;
+}
+/**
+  name: str
+  plate: str
+  make: str
+  model: str
+  year: int
+  thingspeak_id: int
+ */
 export interface JWT {
   token: string;
   type: string;

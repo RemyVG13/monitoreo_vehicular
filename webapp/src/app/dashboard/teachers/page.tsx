@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import { fetchCarData } from '@/services/cardataService';
 import { fetchAllTeachers,deleteTeacher } from '@/services/teacherService';
 import { getAuthDetails } from '@/utils/authUtils';
 import { Teacher, Column, BaseContentElement } from '@/types';
@@ -11,11 +10,8 @@ import { useRouter } from "next/navigation";
 import AddButton from '@/components/addButton';
 
 
-const CarDataTable = () => {
-  //const [data, setData] = useState<CarData[]>([]);
+export default function TeachersPage() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [vehicleId, setVehicleId] = useState('');
-  const [amount, setAmount] = useState('');
   const { token, type } = getAuthDetails();
   const validToken = token ?? '';
   const validType = type ?? '';
@@ -52,7 +48,7 @@ const CarDataTable = () => {
   const handleAdd = () => {
     // Define la acción de añadir (ej., abrir un modal o redirigir a otra página)
     router.push('/dashboard/teachers/create');
-};
+  };
 
   const columns: Column<Teacher>[] = [
     { key: 'first_name', label: 'NOMBRE' },
@@ -74,4 +70,4 @@ const CarDataTable = () => {
   );
 };
 
-export default CarDataTable;
+

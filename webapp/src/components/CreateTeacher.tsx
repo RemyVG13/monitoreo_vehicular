@@ -72,29 +72,29 @@ const CreateTeacher = ({ backToTeachers, createToken,createType}: CreateTeacherP
         {/* Similar input fields as in EditTeacher */}
             <div className="mb-3">
                 <label htmlFor="firstName" className="form-label"><b>Nombre</b></label>
-                <input type="text" className="form-control" id="firstName" value={teacher.firstName} onChange={e => setTeacher({...teacher, firstName: e.target.value})} />
+                <input type="text" className="form-control" id="firstName" value={teacher.firstName} onChange={handleChange}  />
             </div>
             <div className="row">
                 <div className="col">
                     <label htmlFor="lastNameFather" className="form-label"><b>Apellido paterno</b></label>
-                    <input type="text" className="form-control" id="lastNameFather" value={teacher.lastNameFather} onChange={e => setTeacher({...teacher, lastNameFather: e.target.value})} />
+                    <input type="text" className="form-control" id="lastNameFather" value={teacher.lastNameFather} onChange={handleChange}  />
                 </div>
                 <div className="col">
                     <label htmlFor="lastNameMother" className="form-label"><b>Apellido materno</b></label>
-                    <input type="text" className="form-control" id="lastNameMother" value={teacher.lastNameMother} onChange={e => setTeacher({...teacher, lastNameMother: e.target.value})} />
+                    <input type="text" className="form-control" id="lastNameMother" value={teacher.lastNameMother} onChange={handleChange}  />
                 </div>
             </div>
             <div className="mb-3">
                 <label htmlFor="idNumber" className="form-label"><b>Carnet</b></label>
-                <input type="text" className="form-control" id="idNumber" value={teacher.idNumber} onChange={e => setTeacher({...teacher, idNumber: e.target.value})} />
+                <input type="text" className="form-control" id="idNumber" value={teacher.idNumber} onChange={handleChange}  />
             </div>
             <div className="mb-3">
                 <label htmlFor="idZone" className="form-label"><b>Zona</b></label>
-                <input type="text" className="form-control" id="idZone" value={teacher.idZone} onChange={e => setTeacher({...teacher, idZone: e.target.value})} />
+                <input type="text" className="form-control" id="idZone" value={teacher.idZone} onChange={handleChange}  />
             </div>
             <div className="mb-3">
                 <label htmlFor="cellPhone" className="form-label"><b>Celular</b></label>
-                <input type="tel" className="form-control" id="cellPhone" value={teacher.cellPhone} onChange={e => setTeacher({...teacher, cellPhone: e.target.value})} />
+                <input type="tel" className="form-control" id="cellPhone" value={teacher.cellPhone} onChange={handleChange}  />
             </div>
             <div className="mb-3">
                 <label htmlFor="birthday" className="form-label"><b>Cumpleaños</b></label>
@@ -104,7 +104,7 @@ const CreateTeacher = ({ backToTeachers, createToken,createType}: CreateTeacherP
                     className="form-control"
                     id="birthday"
                     value={teacher.birthday}
-                    onChange={e => setTeacher({...teacher, birthday: e.target.value})}
+                    onChange={handleChange} 
                 />
             </div>
         <div className="mb-3">

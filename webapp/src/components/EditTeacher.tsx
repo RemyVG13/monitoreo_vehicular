@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchTeacher, updateTeacher, deleteTeacher } from '@/services/teacherService';
-import { Teacher, FormDataObject } from '@/types';
-
+import { fetchTeacher, updateTeacher } from '@/services/teacherService';
+import { FormDataObject } from '@/types';
 
 interface EditTeacherProps {
     teacher_id: string | null;
@@ -33,7 +32,7 @@ const EditTeacher = ({ teacher_id, backToTeachers, editToken,editType}: EditTeac
     }, [id]);
 
     const fetchTeacherData = async (teacherId: string) => {
-        const data = await fetchTeacher(editToken,editType, teacherId);  // Necesitarás reemplazar "token" y "type" con los valores apropiados
+        const data = await fetchTeacher(editToken,editType, teacherId); 
         if (data) {
             setTeacher({
                 firstName: data.first_name,
@@ -71,7 +70,6 @@ const EditTeacher = ({ teacher_id, backToTeachers, editToken,editType}: EditTeac
                 router.push('/dashboard/teachers');
             }
             
-            //router.push('/dashboard/teachers');
         } catch (error) {
             console.error(error);
         }
