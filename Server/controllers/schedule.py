@@ -3,8 +3,9 @@ from config.db import connection
 from passlib.context import CryptContext
 from fastapi import HTTPException
 from models.schedule import Schedule, UpdateSchedule, Days
-from scripts.time import bolivia_datetime_seconds
+from scripts.time import bolivia_datetime_seconds,seconds_to_hhmm
 from bson import ObjectId
+from bson.regex import Regex
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto") 
 
@@ -144,13 +145,89 @@ async def create_schedule_controller(schedule : Schedule, userLogged : User ):
     scheduledb = await connection.schedules.find_one({"_id": id})
     return scheduledb
 
-async def get_all_schedules_controller(userLogged: User):
-    schedules_async = connection.schedules.find()
+async def get_detail_schedules_controller(userLogged: User,search:str):
+    search_regex = Regex(search, "i")
+    pipeline = [
+        # {
+        #     "$addFields": {
+        #         "year_str": {"$toString": "$year"},  # Convertir 'id_number' a string
+        #         "thingspeak_id_str": {"$toString": "$thingspeak_id"}  # Opcional: convertir otros campos numéricos si es necesario
+        #     }
+        # },
+        {
+            "$match": {
+                "$or": [
+                    {"day": search_regex},
+                    {"hour": search_regex},
+                    {"teacher_id": search_regex},
+                    {"car_id": search_regex}
+                ]
+            }
+        },
+        {
+            "$sort": {"day": 1}
+        }
+    ]
+
     schedules = []
-    async for document in schedules_async:
-        schedules.append(document)
-    return schedules
+
+    if search != "":
+        async for document in connection.schedules.aggregate(pipeline):
+            schedules.append(document)
+
+    else:
+        schedules_async = connection.schedules.find().sort("day")
+        async for document in schedules_async:
+            schedules.append(document)
     
+    schedules_detail = []
+    for document in schedules:
+        car = await connection.cars.find_one({"id":document["car_id"]})
+        teacher = await connection.users.find_one({"id":document["teacher_id"]})
+        document["hour_hhmm"] = seconds_to_hhmm(document["hour"])
+        document["car_name"] = car["name"]
+        document["teacher_name"] = teacher["first_name"] + " " + teacher["father_last_name"]
+        schedules_detail.append(document)
+
+    return schedules_detail
+    
+
+async def get_all_schedules_controller(userLogged: User,search:str):
+    search_regex = Regex(search, "i")
+    pipeline = [
+        # {
+        #     "$addFields": {
+        #         "year_str": {"$toString": "$year"},  # Convertir 'id_number' a string
+        #         "thingspeak_id_str": {"$toString": "$thingspeak_id"}  # Opcional: convertir otros campos numéricos si es necesario
+        #     }
+        # },
+        {
+            "$match": {
+                "$or": [
+                    {"day": search_regex},
+                    {"hour": search_regex},
+                    {"teacher_id": search_regex},
+                    {"car_id": search_regex}
+                ]
+            }
+        },
+        {
+            "$sort": {"day": 1}
+        }
+    ]
+
+    schedules = []
+
+    if search != "":
+        async for document in connection.schedules.aggregate(pipeline):
+            schedules.append(document)
+    else:
+        schedules_async = connection.schedules.find().sort("day")
+        async for document in schedules_async:
+            schedules.append(document)
+    return schedules
+
+
 async def get_schedule_controller(id: str,userLogged: User):
     vrf = await verify_schedule_id(id)    
     if (not vrf["response"]):
@@ -198,7 +275,7 @@ async def update_schedule_controller(id: str,schedule: UpdateSchedule, userLogge
         )
 
     if "car_id" in update_schedule:
-        vrf = verify_car_id(update_schedule["car_id"])
+        vrf = await verify_car_id(update_schedule["car_id"])
         if (not vrf["response"]):
             raise HTTPException(
                 status_code = 403, 
@@ -206,7 +283,7 @@ async def update_schedule_controller(id: str,schedule: UpdateSchedule, userLogge
             )
         
     if "teacher_id" in update_schedule:
-        vrf = verify_teacher_id(update_schedule["teacher_id"])
+        vrf = await verify_teacher_id(update_schedule["teacher_id"])
         if (not vrf["response"]):
             raise HTTPException(
                 status_code = 403, 

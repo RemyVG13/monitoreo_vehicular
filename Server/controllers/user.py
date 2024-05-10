@@ -134,11 +134,9 @@ async def validate_user(user: User):
 
 async def validate_update_user(id: str,update_user:UpdateUser):
     actual_user = await connection.users.find_one({"_id": ObjectId(id)})
-    print(update_user)
     dict_user = dict(update_user)
     vrf = {}
     new_user = {}
-    print(dict_user)
     for key, value in dict_user.items():
         if (value != None):
             match key:

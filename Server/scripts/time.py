@@ -25,7 +25,16 @@ def is_past_date(date: datetime):
 
 def bolivia_datetime_seconds():
     return date_to_seconds(bolivia_datetime())
-#def date_to_seconds():
-#    date = datetime.utcnow() - timedelta(hours=4)
-#    return mktime(date.timetuple())
-#
+
+def seconds_to_hhmm(timestamp: int):
+    # Crear una fecha base, que será la medianoche del día actual
+    base_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    # Añadir el timestamp como un delta de tiempo a la fecha base
+    time_of_day = base_date + timedelta(seconds=timestamp)
+
+    # Formatear la hora en el formato deseado "HH:MM AM/PM"
+    formatted_time = time_of_day.strftime("%I:%M %p")
+    return formatted_time
+    print(formatted_time)
+

@@ -83,6 +83,8 @@ const EditTeacher = ({ teacher_id, backToTeachers, editToken,editType}: EditTeac
 
     return (
         <div className="container mt-5">
+            <h2>Editar Instructor</h2>
+            <br />
             {error && <div className="alert alert-danger">{error}</div>}
             <div className="mb-3">
                 <label htmlFor="firstName" className="form-label"><b>Nombre</b></label>
@@ -112,7 +114,6 @@ const EditTeacher = ({ teacher_id, backToTeachers, editToken,editType}: EditTeac
             </div>
             <div className="mb-3">
                 <label htmlFor="birthday" className="form-label"><b>Cumpleaños</b></label>
-                {/* <input type="date" className="form-control" id="birthday" value={teacher.birthday.toString().substring(0, 10)} onChange={e => setTeacher({...teacher, birthday: new Date(e.target.value).toString().substring(0, 10)})} /> */}
                 <input
                     type="date"
                     className="form-control"

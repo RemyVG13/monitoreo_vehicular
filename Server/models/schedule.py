@@ -15,7 +15,7 @@ class Schedule(BaseContent):
     teacher_id: str
     car_id: str
     day: str #Day Class
-    hour: str
+    hour: int
     class Config:  
         arbitrary_types_allowed=True
 
@@ -23,6 +23,6 @@ class UpdateSchedule(UpdateBaseContent):
     teacher_id: Union[str, None] = None
     car_id: Union[str, None] = None
     day: Union[str, None] = None
-    hour: Union[str, None] = None
+    hour: Union[int, None] = None
     class Config:  
         arbitrary_types_allowed=True

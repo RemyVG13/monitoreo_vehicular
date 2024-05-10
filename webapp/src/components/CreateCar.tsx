@@ -59,7 +59,8 @@ const CreateCar = ({ backToCars, createToken,createType}: CreateTeacherProps) =>
 
   return (
     <div className="container mt-5">
-      <h1>Create Nuevo Auto</h1>
+      <h2>Crear Nuevo Auto</h2>
+      <br />
       {error && <div className="alert alert-danger">{error}</div>}
       <form>
         <div className="mb-3">

@@ -74,6 +74,8 @@ const EditCar = ({ car_id, backToCars, editToken, editType }: EditCarProps) => {
 
     return (
         <div className="container mt-5">
+            <h2>Editar Auto</h2>
+            <br />
             {error && <div className="alert alert-danger">{error}</div>}
             <div className="mb-3">
                 <label htmlFor="name" className="form-label"><b>Nombre</b></label>

@@ -34,14 +34,18 @@ export interface Car extends BaseContentElement{
   year: number;
   thingspeak_id: number;
 }
-/**
-  name: str
-  plate: str
-  make: str
-  model: str
-  year: int
-  thingspeak_id: int
- */
+
+export interface Schedule extends BaseContentElement{
+  teacher_id: string;
+  car_id: string;
+  teacher_name: string;
+  car_name: string;
+  day: string;
+  hour: number;
+  hour_hhmm: string;
+}
+
+
 export interface JWT {
   token: string;
   type: string;

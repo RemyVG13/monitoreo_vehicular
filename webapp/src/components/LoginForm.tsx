@@ -19,7 +19,9 @@ const LoginForm = () => {
         else {
             // Aquí manejas el éxito del login, por ejemplo, guardando el token
             localStorage.setItem('token', result.data.access_token); // Ajusta según tu respuesta
-            router.push('/dashboard/map'); // Redirige a la página principal
+        }
+        if(result.data.access_token){
+          router.push('/dashboard/map'); // Redirige a la página principal
         }
     }).catch(error => {
         setError('Ocurrió un error inesperado durante el login.');

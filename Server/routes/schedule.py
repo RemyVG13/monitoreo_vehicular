@@ -2,6 +2,7 @@ from fastapi import (
     APIRouter, Response, Depends
 )
 from schemas.schedule import scheduleEntity,schedulesEntity
+from schemas.schedule_detail import scheduleDetailEntity,schedulesDetailEntity
 from models.user import User
 from models.schedule import (
     Schedule,
@@ -22,16 +23,24 @@ from controllers.schedule import (
     get_schedule_controller,
     update_schedule_controller,
     delete_schedule_controller,
-    softdelete_schedule_controller
+    softdelete_schedule_controller,
+    get_detail_schedules_controller
 )
 
 schedule = APIRouter(prefix="/schedules", tags=["Schedule"])
 oauth2_scheme = OAuth2PasswordBearer("/login")
 
 @schedule.get('/', response_model=list[Schedule])
-async def get_all_schedules(userLogged: User = Depends(get_user_disabled_current)):
-    schedules = await get_all_schedules_controller(userLogged)
+async def get_all_schedules(userLogged: User = Depends(get_user_disabled_current),search: str=""):
+    schedules = await get_all_schedules_controller(userLogged,search)
     return schedulesEntity(schedules)
+
+@schedule.get('/detail')
+async def get_all_schedules_with_detail(userLogged: User = Depends(get_user_disabled_current),search: str=""):
+    schedules = await get_detail_schedules_controller(userLogged,search)
+    print("schedules")
+    print(schedules)
+    return schedulesDetailEntity(schedules)
 
 @schedule.post('/', response_model=Schedule)
 async def create_schedule(schedule: Schedule, userLogged: User = Depends(get_user_disabled_current)):
@@ -45,6 +54,7 @@ async def get_schedule(id: str,userLogged: User = Depends(get_user_disabled_curr
 
 @schedule.put('/{id}')
 async def update_schedule(id: str, update_schedule: UpdateSchedule,userLogged: User = Depends(get_user_disabled_current)):
+    print(update_schedule)
     schedulejson = await update_schedule_controller(id,update_schedule,userLogged) 
     return scheduleEntity(schedulejson)
 

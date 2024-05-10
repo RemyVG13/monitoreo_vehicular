@@ -24,7 +24,6 @@ interface TableProps<T> {
 function Table<T extends BaseContentElement>({ columns, data, modalMessage,confirmDeleteModal,tableToken,tableType}: TableProps<T>): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
   const pathname = usePathname();
   const router = useRouter();
 
