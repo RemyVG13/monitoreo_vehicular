@@ -16,8 +16,24 @@ origins = [
     "http://192.168.1.12",
 ]
 
+
+import sys
+import os
+
 UVICORN_PORT = 8000
 UVICORN_HOST = "192.168.1.3"
+# Detectar el sistema operativo
+print(sys.platform)
+if sys.platform.startswith('win'):
+    
+    # Configuraciones para Windows
+    UVICORN_PORT = 8000
+else:
+    # Configuraciones para Unix/Linux
+    UVICORN_PORT = 8000
+    UVICORN_HOST = "ec2-18-226-164-75.us-east-2.compute.amazonaws.com"
+
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
