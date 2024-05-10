@@ -21,12 +21,12 @@ import sys
 import os
 
 UVICORN_PORT = 8000
-UVICORN_HOST = "192.168.1.3"
+UVICORN_HOST = "192.168.1.14"
 # Detectar el sistema operativo
 print(sys.platform)
 if sys.platform.startswith('win'):
-    
     # Configuraciones para Windows
+    UVICORN_HOST = "localhost"
     UVICORN_PORT = 8000
 else:
     # Configuraciones para Unix/Linux

@@ -3,8 +3,7 @@ import axios, { AxiosError,AxiosRequestConfig } from "axios"
 import Error from 'next/error';
 
 export const apiclient = axios.create({
-    //baseURL: `${process.env.NEXT_PUBLIC_SERVER_API_URL}`, 
-    baseURL: `http://localhost:8000`, 
+    baseURL: `${process.env.NEXT_PUBLIC_SERVER_API_URL}`, 
     proxy: false  
   })
 
@@ -31,7 +30,6 @@ export async function loginUser(username: string, password: string) {
                 "Access-Control-Allow-Headers": "*",
             }    
         });
-
         // Asume éxito y extrae el token u otra info relevante de la respuesta
         return { success: true, message: 'Login successful', data: response.data };
     } catch (error) {

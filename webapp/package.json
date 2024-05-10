@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "build:dev": "env-cmd -f .env.dev next dev",
+    "build:uat": "env-cmd -f .env.uat next build",
+    "build:prod": "env-cmd -f .env.prod next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -14,6 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "env-cmd": "^10.1.0",
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18"
