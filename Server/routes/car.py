@@ -1,7 +1,7 @@
 from fastapi import (
     APIRouter, Response, Depends
 )
-from schemas.car import carEntity,carsEntity
+from schemas.car import carEntity,carsEntity,carMapEntity
 from models.user import User
 from models.car import (
     Car,
@@ -22,7 +22,8 @@ from controllers.car import (
     get_car_controller,
     update_car_controller,
     delete_car_controller,
-    softdelete_car_controller
+    softdelete_car_controller,
+    get_car_map_controller
 )
 
 car = APIRouter(prefix="/cars", tags=["Car"])
@@ -42,6 +43,11 @@ async def create_car(car: Car, userLogged: User = Depends(get_user_disabled_curr
 async def get_car(id: str,userLogged: User = Depends(get_user_disabled_current)):
     carjson = await get_car_controller(id,userLogged)
     return carEntity(carjson)
+
+@car.get('/mapdetail/{id}')
+async def get_map_car(id: str,userLogged: User = Depends(get_user_disabled_current)):
+    carjson = await get_car_map_controller(id,userLogged)
+    return carMapEntity(carjson)
 
 @car.put('/{id}')
 async def update_car(id: str, update_car: UpdateCar,userLogged: User = Depends(get_user_disabled_current)):

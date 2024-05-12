@@ -55,30 +55,3 @@ async def get_all_cardatas(amount: int, vehicle_id: int,userLogged: User = Depen
         print(f'Velocidad: {i["field4"]} Km/h', "\n")
         cardata_list.append(data)
     return cardata_list
-    #cardatas = await get_all_cardatas_controller(userLogged)
-    #return cardatasEntity(cardatas)
-
-# @cardata.get('/{id}')
-# async def get_cardata(id: str,userLogged: User = Depends(get_user_disabled_current)):
-#     cardatajson = await get_cardata_controller(id,userLogged)
-#     return cardataEntity(cardatajson)
-
-# @cardata.post('/', response_model=CarData)
-# async def create_cardata(cardata: CarData, userLogged: User = Depends(get_user_disabled_current)):
-#     cardatajson = await create_cardata_controller(cardata,userLogged)
-#     return cardataEntity(dict(cardatajson))
-
-# @cardata.put('/{id}')
-# async def update_cardata(id: str, update_cardata: UpdateCarData,userLogged: User = Depends(get_user_disabled_current)):
-#     cardatajson = await update_cardata_controller(id,update_cardata,userLogged) 
-#     return cardataEntity(cardatajson)
-
-# @cardata.delete('/{id}')
-# async def delete_cardata(id: str, userLogged: User = Depends(get_user_disabled_current)):
-#     await delete_cardata_controller(id,userLogged)
-#     return Response(status_code=HTTP_204_NO_CONTENT)
-
-# @cardata.put('/softdelete/{id}')
-# async def softdelete_cardata(id: str, userLogged: User = Depends(get_user_disabled_current)):
-#     await softdelete_cardata_controller(id,userLogged)
-#     return Response(status_code=HTTP_204_NO_CONTENT)

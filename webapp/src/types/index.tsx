@@ -35,6 +35,44 @@ export interface Car extends BaseContentElement{
   thingspeak_id: number;
 }
 
+export interface MapCarDetail extends BaseContentElement{
+  name: string;
+  plate: string;
+  make: string;
+  model: string;
+  year: number;
+  thingspeak_id: number;
+  full_name: string;
+  teacher_name: string;
+  longitude:number;
+  latitude: number;
+  fuel:number;
+  speed: number;
+  state: string;
+  zone: string;
+  is_working: string;
+  teacher_id: string;
+  last_time:string;
+}
+
+/*{
+    "id": "660b2e4996c36ca01404f6e0",
+    "name": "CALDINA 2005ZTE",
+    "plate": "2005 ZTE",
+    "make": "TOYOTA",
+    "model": "CALDINA",
+    "year": 1999,
+    "thingspeak_id": 2425622,
+    "full_name": "TOYOTA CALDINA 1999 2005 ZTE",
+    "teacher_name": "Paola Vicario",
+    "longitude": -66.31427,
+    "latitude": -17.396368,
+    "fuel": 42.6,
+    "speed": 50,
+    "state": "Inactivo",
+    "zone": "Fuera de zona",
+    "teacher_id": "64c9e0f425576f886d74705f"
+}*/
 export interface Schedule extends BaseContentElement{
   teacher_id: string;
   car_id: string;

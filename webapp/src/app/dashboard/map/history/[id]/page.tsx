@@ -10,9 +10,8 @@ const MapComponent = dynamic(() => import('@/components/MapComponent'), {
   ssr: false  // No renderizar del lado del servidor
 });
 
-export default function MapPage() {
+export default function MapHistoryPage() {
   const [coordsFromMapDetail, setcoordsFromMapDetail] = useState<[number, number][]>([[-17.41047981158394, -66.29267798176957]]);
-  //const [schedules, setSchedules] = useState<Schedule[]>([]);
   const handleReceivedCoords = (msg: [number, number][]) => {
     setcoordsFromMapDetail(msg);
   };

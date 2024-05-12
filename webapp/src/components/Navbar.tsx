@@ -12,7 +12,8 @@ const Navbar = () => {
         { name: "Autos", path: "/dashboard/cars" },
         { name: "Horarios", path: "/dashboard/schedules" },
         { name: "Reportes", path: "/dashboard/reports" },
-        { name: "Alarmas", path: "/dashboard/alarms" }
+        { name: "Alarmas", path: "/dashboard/alarms" },
+        { name: "Test", path: "/dashboard/test" }
     ];
     
     const handleLogout = () => {

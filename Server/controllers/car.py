@@ -1,11 +1,21 @@
 from models.user import User, Roles
+import datetime
 from config.db import connection
 from passlib.context import CryptContext
 from fastapi import HTTPException
 from models.car import Car, UpdateCar
-from scripts.time import bolivia_datetime_seconds
+from scripts.time import (
+    bolivia_datetime_seconds,
+    iso_to_local_time,
+    get_current_time_in_bolivia_seconds,
+    get_current_weekday_in_bolivia,
+    is_within_last_minute,
+    convert_to_bolivia_time
+    )
+from scripts.geo import is_point_in_polygon
 from bson import ObjectId
 from bson.regex import Regex
+import requests
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto") 
 
@@ -124,7 +134,118 @@ async def get_car_controller(id: str,userLogged: User):
             detail = vrf["detail"]
         )
     return await connection.cars.find_one({"_id": ObjectId(id)})
+
+
+async def get_car_data(vehicle_id: int,amount: int,):
+    url = f'https://api.thingspeak.com/channels/{vehicle_id}/feeds.json'
+    payload = {"results":amount}
+    response = requests.get(url, params=payload)
     
+    response_json = response.json()
+    cardata_list = []
+    for i in response_json["feeds"]:
+        data = {
+            "date": i["created_at"],
+            "fuel": i["field1"],
+            "latitude": i["field3"],
+            "longitude": i["field2"],
+            "speed": i["field4"],
+        }
+        cardata_list.append(data)
+    return cardata_list
+
+
+async def get_car_map_controller(id: str,userLogged: User):
+    actual_hour = get_current_time_in_bolivia_seconds()
+    actual_weekday = get_current_weekday_in_bolivia()
+    vrf = await verify_car_id(id)    
+    if (not vrf["response"]):
+        raise HTTPException(
+            status_code = 403, 
+            detail = vrf["detail"]
+        )
+    
+    car = await connection.cars.find_one({"_id": ObjectId(id)})
+    carDataBase = {
+        "_id": id,
+        "name": car["name"],
+        "plate": car["plate"],
+        "make": car["make"],
+        "model": car["model"],
+        "year": car["year"],
+        "thingspeak_id": car["thingspeak_id"],
+        "full_name": f'{car["make"]} {car["model"]} {str(car["year"])} {car["plate"]}',
+        "teacher_name": "",
+        "longitude": "",
+        "latitude": "",
+        "fuel": "",
+        "speed": "",
+        "state": "",
+        "zone": "",
+        "is_working": "",
+        "teacher_id": "",
+    }
+
+    schedules_async = connection.schedules.find({
+        "$and": [
+            { "car_id":car["id"] },
+            { "day":actual_weekday}
+        ]
+    })
+    schedules = []
+    async for document in schedules_async:
+        schedules.append(document)
+
+    if not schedules:
+        return carDataBase
+    
+    current_schedule={}
+    for schedule in schedules:
+        if actual_hour <= (schedule["hour"] + 3600) and actual_hour >= (schedule["hour"]):
+            current_schedule = schedule
+
+    teacher_request = {}
+    if not current_schedule:
+        car["teacher_name"] = ""
+        car["teacher_id"] = ""
+        car["is_working"] = ""
+        #return carDataBase
+    else:
+        teacher = await connection.users.find_one({"id":current_schedule["teacher_id"]})
+        car["teacher_name"] = teacher["first_name"] + " " + teacher["father_last_name"]
+        car["teacher_id"]=teacher["id"]
+        car["is_working"] = "Y"
+
+    
+
+
+    car_data = await get_car_data(car["thingspeak_id"],1)
+    car["longitude"] = float(car_data[0]["longitude"])
+    car["latitude"] = float(car_data[0]["latitude"])
+    car["speed"] = float(car_data[0]["speed"])
+    car["fuel"] = float(car_data[0]["fuel"])
+    car["full_name"] = car["make"] + " " + car["model"]  + " " + str(car["year"])  + " " + car["plate"]
+    car["last_time"] = convert_to_bolivia_time(car_data[0]["date"])
+    
+
+
+    isZone = is_point_in_polygon(car["longitude"],car["latitude"])
+    if isZone:
+        car["zone"]="Dentro de zona"
+    else:
+        car["zone"]="Fuera de zona"
+
+    fecha_iso = car_data[0]["date"]
+    isActive = is_within_last_minute(fecha_iso)
+
+    if isActive:
+        car["state"]="Activo"
+    else:
+        car["state"]="Inactivo"  
+    
+    return car
+
+
 
 async def update_car_controller(id: str,car: UpdateCar, userLogged: User):
     vrf = await verify_car_id(id)    

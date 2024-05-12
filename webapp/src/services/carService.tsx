@@ -28,6 +28,18 @@ export const fetchCar = async (token: string, type: string, car_id: string) => {
   }
 }
 
+export const fetchMapCar = async (token: string, type: string, car_id: string) => {
+  try {
+    const response = await apiclient.get(`cars/mapdetail/${car_id}`, {
+      headers: configHeader(token, type),
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching map car:", error);
+    throw error;
+  }
+}
+
 
 export const deleteCar = async (token: string, type: string, car_id: string | null) => {
   try {
