@@ -24,15 +24,15 @@ from controllers.alarm import (
 alarm = APIRouter(prefix="/alarms", tags=["alarm"])
 oauth2_scheme = OAuth2PasswordBearer("/login")
 
-@alarm.get('/', response_model=list[Alarm])
+@alarm.get('/')
 async def get_all_alarms(userLogged: User = Depends(get_user_disabled_current),search: str=""):
     alarms = await get_all_alarms_controller(userLogged,search)
     return alarmsEntity(alarms)
 
-@alarm.post('/geo/', response_model=Alarm)
+@alarm.post('/geo/')
 async def create_alarm(alarm: Alarm, userLogged: User = Depends(get_user_disabled_current)):
     print(alarm)
-    alarmjson = await create_alarm_controller(alarm,userLogged)
-    return alarmEntity(dict(alarmjson))
+    #alarmjson = await create_alarm_controller(alarm,userLogged)
+    #return alarmEntity(dict(alarmjson))
 
 
