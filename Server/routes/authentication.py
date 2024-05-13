@@ -111,7 +111,7 @@ async def authenticate_user(username, password):
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await authenticate_user(form_data.username, form_data.password)
     access_token_expires = timedelta(days=7)
-    access_token_jwt = await create_token({"sub": user.username,"rol":user.rol,"user":dict(user)}, access_token_expires)
+    access_token_jwt = await create_token({"sub": user.username,"rol":user.rol}, access_token_expires)
     return {
         "access_token": access_token_jwt,
         "token_type": "bearer"
