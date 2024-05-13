@@ -42,14 +42,6 @@ def verify_getter_rol(getter: User):
         return  {"response": False, "detail": f'User {getter.first_name} does not have enough privileges'}
     return {"response": True, "detail": "Ok"}
 
-'''
-    date: str#
-    hour: str#
-    reason: str#
-    teacher_name: str
-    car_name: str#
-    thingspeak_id: int#
-'''
 #CRUD functions
 async def create_geoalarm_controller(alarm : Alarm, userLogged : User ):
     vrf = verify_creator_rol(userLogged)    
@@ -64,7 +56,7 @@ async def create_geoalarm_controller(alarm : Alarm, userLogged : User ):
     actual_weekday = get_current_weekday_in_bolivia()
 
     dict_alarm["date"] = actual_time["date"]
-    dict_alarm["time"] = actual_time["time"]
+    dict_alarm["hour"] = actual_time["time"]
     dict_alarm["reason"] = "Fuera de área"
 
     car = await connection.cars.find_one({"thingspeak_id":dict_alarm["thingspeak_id"]})
