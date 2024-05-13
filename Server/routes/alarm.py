@@ -18,7 +18,8 @@ from typing import Annotated
 from routes.authentication import get_user_disabled_current
 from controllers.alarm import (
     create_geoalarm_controller,
-    get_all_alarms_controller
+    get_all_alarms_controller,
+    create_fuelalarm_controller
 )
 
 alarm = APIRouter(prefix="/alarms", tags=["alarm"])
@@ -30,12 +31,11 @@ async def get_all_alarms(userLogged: User = Depends(get_user_disabled_current),s
     return alarmsEntity(alarms)
 
 @alarm.post('/geo/')
-async def create_alarm(alarm: Alarm, userLogged: User = Depends(get_user_disabled_current)):
-    print("alarm")
-    print(alarm)
+async def create_geo_alarm(alarm: Alarm, userLogged: User = Depends(get_user_disabled_current)):
     alarmjson = await create_geoalarm_controller(alarm,userLogged)
-    print("alarmjson")
-    print(alarmjson)
     return alarmEntity(dict(alarmjson))
 
-
+@alarm.post('/fuel/')
+async def create_fuel_alarm(alarm: Alarm, userLogged: User = Depends(get_user_disabled_current)):
+    alarmjson = await create_fuelalarm_controller(alarm,userLogged)
+    return alarmEntity(dict(alarmjson))

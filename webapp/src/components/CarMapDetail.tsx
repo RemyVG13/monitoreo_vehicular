@@ -102,7 +102,8 @@ return (
                     <div className='col-3 col-sm-2 col-lg-3'>
                         <FontAwesomeIcon icon={faCarSide} style={{
                         border: '2px solid MediumAquamarine',
-                        backgroundColor: 'Gainsboro',
+                        backgroundColor: 'Gainsboro', 
+                        borderRadius: '50%',
                         padding: '10px', 
                         alignItems: 'center',
                         justifyContent: 'center',

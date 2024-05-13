@@ -12,7 +12,9 @@ interface CarSearchProps {
 const CarSearch: React.FC<CarSearchProps> = ({ carToken, carType, carId = "",setWayPoints }) => {
   const [cars, setCars] = useState<Car[]>([]);
   const [selectedCarId, setSelectedCarId] = useState<string>(carId);
-  const today = new Date();
+  const utcDate = new Date(); // Obtiene la fecha y hora actual en UTC
+  const boliviaTime = new Date(utcDate.getTime() - 4 * 3600000);
+  const today = boliviaTime
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
   const formatDate = (date: Date) => date.toISOString().slice(0, 16);

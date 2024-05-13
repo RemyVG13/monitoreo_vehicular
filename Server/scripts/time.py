@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta,timezone
+from dateutil.relativedelta import relativedelta
 from time import mktime
 
 def regional_timezone(hour : int = 0):
@@ -134,3 +135,9 @@ def get_bolivia_date_time():
         'date': formatted_date,
         'time': formatted_time
     }
+
+def add_time_to_date(date_str, add_hours=0, add_days=0, add_weeks=0, add_months=0, add_years=0):
+    date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
+    new_date = date + timedelta(hours=add_hours, days=add_days, weeks=add_weeks)
+    new_date += relativedelta(months=add_months, years=add_years)
+    return new_date.strftime("%Y-%m-%dT%H:%M:%SZ")

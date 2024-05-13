@@ -105,6 +105,60 @@ async def create_geoalarm_controller(alarm : Alarm, userLogged : User ):
     alarmdb = await connection.alarms.find_one({"_id": id})
     return alarmdb  
 
+async def create_fuelalarm_controller(alarm : Alarm, userLogged : User ):
+    vrf = verify_creator_rol(userLogged)    
+    if (not vrf["response"]):
+        raise HTTPException(
+            status_code = 403, 
+            detail = vrf["detail"]
+        )
+    dict_alarm = dict(alarm)
+    actual_time = get_bolivia_date_time()
+    actual_hour = get_current_time_in_bolivia_seconds()
+    actual_weekday = get_current_weekday_in_bolivia()
+
+    dict_alarm["date"] = actual_time["date"]
+    dict_alarm["time"] = actual_time["time"]
+    dict_alarm["reason"] = "Combustible"
+
+    car = await connection.cars.find_one({"thingspeak_id":dict_alarm["thingspeak_id"]})
+    dict_alarm["car_name"] = car["name"]
+    schedules_async = connection.schedules.find({
+            "$and": [
+                { "car_id":car["id"] },
+                { "day":actual_weekday}
+            ]
+        })
+    
+    schedules = []
+    current_schedule={}
+    async for document in schedules_async:
+        schedules.append(document)
+
+    if not schedules:
+        dict_alarm["teacher_name"] = "Sin instructor"
+    else:
+        for schedule in schedules:
+            if actual_hour <= (schedule["hour"] + 3600) and actual_hour >= (schedule["hour"]):
+                current_schedule = schedule
+
+    teacher_request = {}
+    if not current_schedule:
+        dict_alarm["teacher_name"] = "Sin instructor"
+    else:
+        teacher = await connection.users.find_one({"id":current_schedule["teacher_id"]})
+        dict_alarm["teacher_name"] = teacher["first_name"] + " " + teacher["father_last_name"]
+
+    
+    dict_alarm["creation_date_inseconds"] = bolivia_datetime_seconds()
+    dict_alarm["creator_id"] = str(userLogged.id)
+    
+    res = await connection.alarms.insert_one(dict_alarm)
+    id = res.inserted_id
+    await connection.alarms.update_one({"_id": ObjectId(id)}, {"$set": {"id":str(id)}})
+    alarmdb = await connection.alarms.find_one({"_id": id})
+    return alarmdb  
+
 async def get_all_alarms_controller(userLogged: User,search:str):
     search_regex = Regex(search, "i")
     pipeline = [

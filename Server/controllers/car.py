@@ -146,20 +146,8 @@ async def get_car_data(vehicle_id: int,amount: int,):
         cardata_list.append(data)
     return cardata_list
 
-'''
-requests to thingspeak
-1 = combustible
-2 = longitud
-3 = latitude
-4 = velocidad
-6 = geo alarma
-7 = fuel alarma
-GET https://api.thingspeak.com/update?api_key=E43NHEZK74CHN9HG&field1=43.8&field2=43.8&field1=43.8&field1=43.8&field1=43.8&field1=43.8
-'''
-
 
 async def get_car_history_controller(id:str,date_start:str,date_end:str):
-    #https://api.thingspeak.com/channels/2425622/fields/3.json?start=2024-04-26T10:10:14Z&end=2024-04-26T10:20:46Z
     car = await connection.cars.find_one({"_id": ObjectId(id)})
     url_longitude = f'https://api.thingspeak.com/channels/{car["thingspeak_id"]}/fields/2.json'
     url_latitude = f'https://api.thingspeak.com/channels/{car["thingspeak_id"]}/fields/3.json'
@@ -174,14 +162,15 @@ async def get_car_history_controller(id:str,date_start:str,date_end:str):
     dates_list = []
     teacher_name_list = []
     i = 0
-    print(url_longitude)
-    print(response_longitude)
-    print("response_longitude_json[feeds]")
-    print(response_longitude_json)
     while i < len(response_longitude_json["feeds"]) :
         long = response_longitude_json["feeds"][i]["field2"]
         lat = response_latitude_json["feeds"][i]["field3"]
-        coords = [float(lat),float(long)]
+        if (lat and long):
+            coords = [float(lat),float(long)]
+        else:
+            long = response_longitude_json["feeds"][i-1]["field2"]
+            lat = response_latitude_json["feeds"][i-1]["field3"]
+            coords = [float(lat),float(long)]
         coords_list.append(coords)
 
         dates_list.append(convert_to_bolivia_time(response_latitude_json["feeds"][i]["created_at"]))
@@ -208,7 +197,6 @@ async def get_car_history_controller(id:str,date_start:str,date_end:str):
 
             if not current_schedule:
                 teacher_name = "No hay instructor"
-                #return carDataBase
             else:
                 teacher = await connection.users.find_one({"id":current_schedule["teacher_id"]})
                 teacher_name = teacher["first_name"] + " " + teacher["father_last_name"]
