@@ -42,13 +42,8 @@ def verify_getter_rol(getter: User):
     return {"response": True, "detail": "Ok"}
 
 async def check_car_conflict(existing_car: dict, updated_car: dict) -> bool:
-    # Verificar si el ID del auto se está actualizando
     if updated_car.get("plate") is not None and updated_car.get("plate") != existing_car.get("plate"):
-        
-        # Obtener los valores de day y hour actualizados, o mantener los valores originales si no se proporcionan
         updated_plate = updated_car.get("plate", existing_car.get("plate"))
-
-        # Consultar horarios del auto para la misma hora y día
         conflicting_cars = await connection.cars.find({
             "day": updated_plate
         }).to_list(length=None)
@@ -89,8 +84,6 @@ async def create_car_controller(car : Car, userLogged : User ):
 
 async def get_all_cars_controller(userLogged: User,search:str):
     search_regex = Regex(search, "i")  # Expresión regular para buscar parcialmente en strings
-
-    # Pipeline de agregación para buscar en múltiples campos, incluyendo la conversión de números a string
     pipeline = [
         {
             "$addFields": {
@@ -114,7 +107,6 @@ async def get_all_cars_controller(userLogged: User,search:str):
             "$sort": {"name": 1}
         }
     ]
-    #cars_async = connection.cars.find()
     cars = []
 
     if search != "":
@@ -153,6 +145,83 @@ async def get_car_data(vehicle_id: int,amount: int,):
         }
         cardata_list.append(data)
     return cardata_list
+
+'''
+requests to thingspeak
+1 = combustible
+2 = longitud
+3 = latitude
+4 = velocidad
+6 = geo alarma
+7 = fuel alarma
+GET https://api.thingspeak.com/update?api_key=E43NHEZK74CHN9HG&field1=43.8&field2=43.8&field1=43.8&field1=43.8&field1=43.8&field1=43.8
+'''
+
+
+async def get_car_history_controller(id:str,date_start:str,date_end:str):
+    #https://api.thingspeak.com/channels/2425622/fields/3.json?start=2024-04-26T10:10:14Z&end=2024-04-26T10:20:46Z
+    car = await connection.cars.find_one({"_id": ObjectId(id)})
+    url_longitude = f'https://api.thingspeak.com/channels/{car["thingspeak_id"]}/fields/2.json'
+    url_latitude = f'https://api.thingspeak.com/channels/{car["thingspeak_id"]}/fields/3.json'
+    payload = {"start":date_start,
+               "end":date_end
+               }
+    response_longitude = requests.get(url_longitude, params=payload)
+    response_latitude = requests.get(url_latitude, params=payload)
+    response_longitude_json = response_longitude.json()
+    response_latitude_json = response_latitude.json()
+    coords_list = []
+    dates_list = []
+    teacher_name_list = []
+    i = 0
+    print(url_longitude)
+    print(response_longitude)
+    print("response_longitude_json[feeds]")
+    print(response_longitude_json)
+    while i < len(response_longitude_json["feeds"]) :
+        long = response_longitude_json["feeds"][i]["field2"]
+        lat = response_latitude_json["feeds"][i]["field3"]
+        coords = [float(lat),float(long)]
+        coords_list.append(coords)
+
+        dates_list.append(convert_to_bolivia_time(response_latitude_json["feeds"][i]["created_at"]))
+
+        dates = iso_to_local_time(response_latitude_json["feeds"][i]["created_at"])
+        schedules_async = connection.schedules.find({
+            "$and": [
+                { "car_id":car["id"] },
+                { "day":dates["day"]}
+            ]
+        })
+        teacher_name = "No hay instructor"
+        schedules = []
+        async for document in schedules_async:
+            schedules.append(document)
+
+        if not schedules:
+            teacher_name = "No hay instructor"
+        else:
+            current_schedule={}
+            for schedule in schedules:
+                if dates["timestamp"] <= (schedule["hour"] + 3600) and dates["timestamp"] >= (schedule["hour"]):
+                    current_schedule = schedule
+
+            if not current_schedule:
+                teacher_name = "No hay instructor"
+                #return carDataBase
+            else:
+                teacher = await connection.users.find_one({"id":current_schedule["teacher_id"]})
+                teacher_name = teacher["first_name"] + " " + teacher["father_last_name"]
+
+        teacher_name_list.append(teacher_name)
+        i=i+1
+    history = {
+        "coords_list": coords_list,
+        "dates_list": dates_list,
+        "teacher_name_list":teacher_name_list
+    }
+    return history
+
 
 
 async def get_car_map_controller(id: str,userLogged: User):

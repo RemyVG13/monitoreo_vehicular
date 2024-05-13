@@ -23,7 +23,8 @@ from controllers.car import (
     update_car_controller,
     delete_car_controller,
     softdelete_car_controller,
-    get_car_map_controller
+    get_car_map_controller,
+    get_car_history_controller
 )
 
 car = APIRouter(prefix="/cars", tags=["Car"])
@@ -48,6 +49,11 @@ async def get_car(id: str,userLogged: User = Depends(get_user_disabled_current))
 async def get_map_car(id: str,userLogged: User = Depends(get_user_disabled_current)):
     carjson = await get_car_map_controller(id,userLogged)
     return carMapEntity(carjson)
+
+@car.get('/history/{id}')
+async def get_car_history(id: str,start_date:str,end_date:str,userLogged: User = Depends(get_user_disabled_current)):
+    carjson = await get_car_history_controller(id, start_date, end_date)
+    return carjson
 
 @car.put('/{id}')
 async def update_car(id: str, update_car: UpdateCar,userLogged: User = Depends(get_user_disabled_current)):

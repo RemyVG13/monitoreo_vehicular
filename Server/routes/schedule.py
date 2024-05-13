@@ -38,8 +38,6 @@ async def get_all_schedules(userLogged: User = Depends(get_user_disabled_current
 @schedule.get('/detail')
 async def get_all_schedules_with_detail(userLogged: User = Depends(get_user_disabled_current),search: str=""):
     schedules = await get_detail_schedules_controller(userLogged,search)
-    print("schedules")
-    print(schedules)
     return schedulesDetailEntity(schedules)
 
 @schedule.post('/', response_model=Schedule)
@@ -54,7 +52,6 @@ async def get_schedule(id: str,userLogged: User = Depends(get_user_disabled_curr
 
 @schedule.put('/{id}')
 async def update_schedule(id: str, update_schedule: UpdateSchedule,userLogged: User = Depends(get_user_disabled_current)):
-    print(update_schedule)
     schedulejson = await update_schedule_controller(id,update_schedule,userLogged) 
     return scheduleEntity(schedulejson)
 
