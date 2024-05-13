@@ -4,6 +4,7 @@ from routes.teacher import teacher
 from routes.schedule import schedule
 from routes.car import car
 from routes.cardata import cardata
+from routes.alarm import alarm
 
 from routes.authentication import auth
 from fastapi.middleware.cors import CORSMiddleware
@@ -50,6 +51,7 @@ app.include_router(teacher)
 app.include_router(schedule)
 app.include_router(car)
 app.include_router(cardata)
+app.include_router(alarm)
 
 app.include_router(auth)
 
