@@ -2,7 +2,7 @@ from models.user import User, Roles
 from config.db import connection
 from passlib.context import CryptContext
 from fastapi import HTTPException
-from models.alarm import Alarm, UpdateAlarm, Days
+from models.alarm import Alarm, UpdateAlarm
 from scripts.time import bolivia_datetime_seconds,seconds_to_hhmm
 from bson import ObjectId
 from bson.regex import Regex
@@ -36,13 +36,6 @@ def verify_getter_rol(getter: User):
     if ( (getter.rol != Roles.ADMIN.value) and (getter.rol != Roles.SUPERADMIN.value) and (getter.rol != Roles.TEACHER.value)):
         return  {"response": False, "detail": f'User {getter.first_name} does not have enough privileges'}
     return {"response": True, "detail": "Ok"}
-
-def verify_day(day: str):
-    values = [member.value for member in Days]
-    if day not in values:
-        return  {"response": False, "detail": f'{day} is not a valid day'}
-    return {"response": True, "detail": "Ok"}
-
 
 
 #CRUD functions
