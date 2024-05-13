@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAllCars, fetchMapCar } from '@/services/carService';
-import { Car, MapCarDetail } from '@/types'; // Asegúrate de importar MapCarDetail
+import { Car, MapCarDetail } from '@/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
@@ -12,10 +12,10 @@ import { useRef } from 'react';
 interface CarMapDetailProps {
   carToken: string;
   carType: string;
-  setcoords: (msg: [number, number][]) => void;
+  setcoords: (msg: [number, number][],msg2: string[],msg3: string[]) => void;
 }
 
-const CarMapDetail: React.FC<CarMapDetailProps> = ({ carToken, carType, setcoords }) => {
+const CarMapDetail: React.FC<CarMapDetailProps> = ({ carToken, carType, setcoords}) => {
     const router = useRouter();
     const startCarIdRef = useRef<string>("");
     const [cars, setCars] = useState<Car[]>([]);
@@ -38,7 +38,12 @@ const CarMapDetail: React.FC<CarMapDetailProps> = ({ carToken, carType, setcoord
             console.log("startCarId",startCarIdRef.current)
             if (startCarIdRef.current){
                 const mapCarDetails = await fetchMapCar(carToken, carType, startCarIdRef.current);
-                mapCarDetails? setcoords([[mapCarDetails.latitude,mapCarDetails.longitude]]): console.log("No hay coordenadas");
+                mapCarDetails? setcoords(
+                    [[mapCarDetails.latitude,mapCarDetails.longitude]],
+                    [mapCarDetails.teacher_name],
+                    [mapCarDetails.last_time]
+                )
+                    : console.log("No hay informacion");
                 setSelectedCar(mapCarDetails);
                 console.log("Fetching data...");
                 console.log('Data fetched:', mapCarDetails);
@@ -54,8 +59,8 @@ const CarMapDetail: React.FC<CarMapDetailProps> = ({ carToken, carType, setcoord
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            setCoords(); // Llama a tu función aquí
-        }, 5000); // Se ejecuta cada 15000 milisegundos, es decir, cada 15 segundos
+            setCoords();
+        }, 5000);
 
         return () => clearInterval(intervalId);
     }, []);
@@ -66,7 +71,7 @@ const CarMapDetail: React.FC<CarMapDetailProps> = ({ carToken, carType, setcoord
         console.log("mapCarDetails",mapCarDetails)
         startCarIdRef.current = car.id;
         setSelectedCar(mapCarDetails);
-        setShowDropdown(false); // Cierra el menú desplegable
+        setShowDropdown(false);
     };
 
 return (
@@ -96,10 +101,9 @@ return (
                 <div className='row'>
                     <div className='col-3 col-sm-2 col-lg-3'>
                         <FontAwesomeIcon icon={faCarSide} style={{
-                        border: '2px solid MediumAquamarine',  // Borde azul
-                        backgroundColor: 'Gainsboro',  // Fondo blanco
-                        borderRadius: '50%',       // Esto hace que el contenedor sea un círculo
-                        padding: '10px',           // Espacio entre el borde del círculo y el icono 
+                        border: '2px solid MediumAquamarine',
+                        backgroundColor: 'Gainsboro',
+                        padding: '10px', 
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: 36
@@ -116,7 +120,7 @@ return (
                 <div className='car-detail-name'>Vehículo</div>
                 <div style={{marginLeft:'10px'}} className='car-detail-content'>{selectedCar.make} {selectedCar.model} {selectedCar.year} {selectedCar.plate}</div>
             </div>
-
+            <br />
             {selectedCar.is_working == "" && (
                 <div style={{marginLeft:'30px'}}>
                     <br />
@@ -131,7 +135,7 @@ return (
                     <div className='car-detail-content' style={{marginLeft:'10px'}}>{selectedCar.teacher_name}</div>           
                 </div>
             )}
-
+            <br />
             <div style={{marginLeft:'30px'}}>
                 <div className='car-detail-name'>Combustible</div>
                 <div className='car-detail-content' style={{marginLeft:'10px'}}>{selectedCar.fuel} L</div>
@@ -160,14 +164,14 @@ return (
             <button
                 onClick={() => router.push(`/dashboard/map/history/${selectedCar.id}`)}
                 style={{
-                    backgroundColor: '#007BFF', // Color de fondo azul
-                    color: 'white',              // Color de texto blanco
-                    border: 'none',              // Sin borde
-                    borderRadius: '20px',       // Bordes redondeados
-                    padding: '10px 20px',       // Padding horizontal y vertical
-                    fontSize: '16px',           // Tamaño del texto
-                    cursor: 'pointer',          // Cursor de mano
-                    outline: 'none'             // Elimina el contorno al hacer foco
+                    backgroundColor: '#007BFF',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '20px',
+                    padding: '10px 20px', 
+                    fontSize: '16px',
+                    cursor: 'pointer', 
+                    outline: 'none'
                 }}
                 >
                 Historial

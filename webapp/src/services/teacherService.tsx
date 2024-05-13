@@ -62,8 +62,6 @@ export const updateTeacher = async (token: string, type: string, teacher_id: str
 
 export const createTeacher = async (token: string, type: string, formData: FormDataObject) => {
   try {
-    console.log("createTeacher");
-    console.log(token);
     const response = await apiclient.post(`teachers/`, formData, {
       headers: configHeader(token, type),
     });

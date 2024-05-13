@@ -19,7 +19,7 @@ const CreateSchedule = ({ backToSchedules, createToken, createType }: CreateSche
     teacher_id: '',
     car_id: '',
     day: '',
-    time: '', // This will handle time input
+    time: '',
   });
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [cars, setCars] = useState<Car[]>([]);
@@ -47,7 +47,6 @@ const CreateSchedule = ({ backToSchedules, createToken, createType }: CreateSche
 
   const handleSubmit = async () => {
     setError('');
-    // Convert time to seconds since midnight
     const [hours, minutes] = schedule.time.split(':').map(Number);
     const hourInSeconds = hours * 3600 + minutes * 60;
     const formData: FormDataObject = {

@@ -6,7 +6,7 @@ import Image from 'next/image';
 const LoginPage = () => {
   return (
     <div className="login-page">
-      <div className="overlay"></div> {/* Overlay para el color */}
+      <div className="overlay"></div>
       <div className="content">
         <div className="logo d-none d-md-block">
           <Image src="/assets/logo.svg" alt="Logo del Instituto" width={500} height={500} />

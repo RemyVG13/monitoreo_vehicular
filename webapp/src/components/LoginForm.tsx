@@ -17,11 +17,10 @@ const LoginForm = () => {
     loginUser(username, password).then(result => {
         if (!result.success) setError(result.message);
         else {
-            // Aquí manejas el éxito del login, por ejemplo, guardando el token
-            localStorage.setItem('token', result.data.access_token); // Ajusta según tu respuesta
+            localStorage.setItem('token', result.data.access_token); 
         }
         if(result.data.access_token){
-          router.push('/dashboard/map'); // Redirige a la página principal
+          router.push('/dashboard/map'); 
         }
     }).catch(error => {
         setError('Ocurrió un error inesperado durante el login.');

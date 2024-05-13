@@ -33,7 +33,7 @@ function Table<T extends BaseContentElement>({ columns, data, modalMessage,confi
   };
 
   const handleConfirmDelete = () => {
-    console.log('Eliminar ID:', selectedId);  // Aquí iría tu lógica de eliminación
+    console.log('Eliminar ID:', selectedId);
     setIsModalOpen(false);
   };
 
@@ -49,7 +49,12 @@ function Table<T extends BaseContentElement>({ columns, data, modalMessage,confi
             {columns.map((column, index) => (
               <th key={index}>{column.label}</th>
             ))}
-            <th></th>
+            { tableToken !== "-" ?
+                <th></th>
+                :
+                null
+            }
+            
           </tr>
         </thead>
         <tbody>
@@ -58,12 +63,17 @@ function Table<T extends BaseContentElement>({ columns, data, modalMessage,confi
               {columns.map((column, colIndex) => (
                 <td key={colIndex}>{item[column.key] ? String(item[column.key]) : ''}</td>
               ))}
-              <td>
-                <button onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteClick(item.id);
-                }} className="btn delete-table-btn">Eliminar</button>
-              </td>
+              { tableToken !== "-" ?
+                <td>
+                  <button onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteClick(item.id);
+                  }} className="btn delete-table-btn">Eliminar</button>
+                </td>
+                :
+                null
+              }
+              
             </tr>
           ))}
         </tbody>

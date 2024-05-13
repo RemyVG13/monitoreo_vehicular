@@ -18,10 +18,8 @@ const CarDataTable = () => {
         return;
     }
     try {
-        //const fetchedData = await fetchCarData(validToken, validType, parseInt(vehicleId), parseInt(amount));
         const fetchedCarData = await fetchMapCar(validToken, validType,"660b2e4996c36ca01404f6e0") ;
         console.log("fetchedCarData",fetchedCarData);
-        //setData(fetchedData);
     } catch (error) {
         console.error(error);
     }

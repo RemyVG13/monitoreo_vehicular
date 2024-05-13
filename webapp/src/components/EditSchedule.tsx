@@ -20,7 +20,7 @@ const EditSchedule = ({ schedule_id, backToSchedules, editToken, editType }: Edi
         teacher_id: '',
         car_id: '',
         day: '',
-        time: '',  // This will handle time input
+        time: '',
     });
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [cars, setCars] = useState<Car[]>([]);
@@ -40,7 +40,7 @@ const EditSchedule = ({ schedule_id, backToSchedules, editToken, editType }: Edi
                         teacher_id: data.teacher_id,
                         car_id: data.car_id,
                         day: data.day,
-                        time: new Date(data.hour * 1000).toISOString().substring(11, 16),  // Convert seconds to HH:MM format
+                        time: new Date(data.hour * 1000).toISOString().substring(11, 16),
                     });
                 }
             } catch (error) {
@@ -59,7 +59,6 @@ const EditSchedule = ({ schedule_id, backToSchedules, editToken, editType }: Edi
 
     const handleSubmit = async () => {
         setError('');
-        // Convert time from HH:MM to seconds since midnight
         const [hours, minutes] = schedule.time.split(':').map(Number);
         const hourInSeconds = hours * 3600 + minutes * 60;
         const formData: FormDataObject = {

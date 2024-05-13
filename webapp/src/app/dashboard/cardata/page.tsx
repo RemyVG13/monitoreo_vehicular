@@ -19,7 +19,6 @@ const CarDataTable = () => {
     }
     try {
       const fetchedData = await fetchCarData(validToken, validType, parseInt(vehicleId), parseInt(amount));
-      //console.log(fetchedData);
       setData(fetchedData);
     } catch (error) {
       console.error(error);

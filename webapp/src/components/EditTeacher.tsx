@@ -40,7 +40,7 @@ const EditTeacher = ({ teacher_id, backToTeachers, editToken,editType}: EditTeac
                 lastNameMother: data.mother_last_name,
                 idNumber: data.id_number.toString(),
                 idZone: data.id_zone,
-                cellPhone: data.cellPhone,  // Asumiendo que este campo existe
+                cellPhone: data.cellPhone,
                 birthday: new Date(data.birthday_date_inseconds * 1000).toISOString().substring(0, 10),
             });
         }
@@ -49,13 +49,12 @@ const EditTeacher = ({ teacher_id, backToTeachers, editToken,editType}: EditTeac
     const handleSave = async () => {
         setError(null);
         const formData: FormDataObject = {
-            // Asume que los campos aquí son los que tu backend espera
             first_name: teacher.firstName,
             father_last_name: teacher.lastNameFather,
             mother_last_name: teacher.lastNameMother,
             id_number: teacher.idNumber,
             id_zone: teacher.idZone,
-            cellPhone: teacher.cellPhone, // Asegúrate de que este campo exista en tu backend
+            cellPhone: teacher.cellPhone, 
             birthday_date_inseconds: new Date(teacher.birthday).getTime() / 1000,
         };
         try {

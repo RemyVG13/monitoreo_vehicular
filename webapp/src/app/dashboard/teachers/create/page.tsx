@@ -10,7 +10,6 @@ export default function CreateTeacherPage () {
   const validToken = token ?? '';
   const validType = type ?? '';
 
-  // Función para volver a la lista de maestros
   const backToTeachers = () => {
     router.push('/dashboard/teachers');
   };

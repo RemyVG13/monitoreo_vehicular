@@ -5,16 +5,19 @@ import { useRouter } from 'next/navigation';
 import { getAuthDetails } from '@/utils/authUtils';
 import CarMapDetail from '@/components/CarMapDetail';
 import { useState,useEffect } from 'react';
-// Importa dinámicamente el MapComponent, asegurando que no se intente cargar en el servidor
+
 const MapComponent = dynamic(() => import('@/components/MapComponent'), {
   ssr: false  // No renderizar del lado del servidor
 });
 
 export default function MapPage() {
-  const [coordsFromMapDetail, setcoordsFromMapDetail] = useState<[number, number][]>([[-17.41047981158394, -66.29267798176957]]);
-  //const [schedules, setSchedules] = useState<Schedule[]>([]);
-  const handleReceivedCoords = (msg: [number, number][]) => {
+  const [coordsFromMapDetail, setcoordsFromMapDetail] = useState<[number, number][]>([[0, 0]]);
+  const [teacherFromMapDetail, setTeacherFromMapDetail] = useState<string[]>([""]);
+  const [dateFromMapDetail, setDateFromMapDetail] = useState<string[]>([""]);
+  const handleReceivedCoords = (msg: [number, number][], msg2: string[], msg3: string[]) => {
     setcoordsFromMapDetail(msg);
+    setTeacherFromMapDetail(msg2);
+    setDateFromMapDetail(msg3);
   };
   const { token, type } = getAuthDetails();
   const validToken = token ?? '';
@@ -33,7 +36,7 @@ export default function MapPage() {
             <CarMapDetail carToken={validToken} carType={validType} setcoords={handleReceivedCoords}/>
           </div>
           <div className='col-lg-8 rounded'>
-            <MapComponent markers={coordsFromMapDetail}/>
+            <MapComponent markers={coordsFromMapDetail} names={teacherFromMapDetail} dates={dateFromMapDetail}/>
           </div>
         </div>
       </div>

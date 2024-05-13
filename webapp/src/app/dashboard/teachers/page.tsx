@@ -19,7 +19,6 @@ export default function TeachersPage() {
 
   const router = useRouter();
   useEffect(() => {
-    //console.log(token);
     handleSearch("");
   }, []); // Ejecuta solo una vez al montar el componente
 
@@ -27,7 +26,6 @@ export default function TeachersPage() {
   const handleSearch = async (searchTerm: string) => {
     try {
     const fetchedData = await fetchAllTeachers(validToken, validType, searchTerm);
-    //console.log(fetchedData);
     setTeachers(fetchedData);
     } catch (error) {
     console.error(error);
@@ -38,15 +36,12 @@ export default function TeachersPage() {
     
     try {
       const reponse = await deleteTeacher(deleteToken, deleteType, searchTerm);
-      //console.log(reponse);
       handleSearch("");
-      //router.push('/dashboard/teachers');
     } catch (error) {
       console.error(error);
     }
   };
   const handleAdd = () => {
-    // Define la acción de añadir (ej., abrir un modal o redirigir a otra página)
     router.push('/dashboard/teachers/create');
   };
 

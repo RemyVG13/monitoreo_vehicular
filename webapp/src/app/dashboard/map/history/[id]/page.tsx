@@ -5,16 +5,23 @@ import { useRouter } from 'next/navigation';
 import { getAuthDetails } from '@/utils/authUtils';
 import CarMapDetail from '@/components/CarMapDetail';
 import { useState,useEffect } from 'react';
-// Importa dinámicamente el MapComponent, asegurando que no se intente cargar en el servidor
+import CarSearch from '@/components/CarSearch';
 const MapComponent = dynamic(() => import('@/components/MapComponent'), {
   ssr: false  // No renderizar del lado del servidor
 });
 
-export default function MapHistoryPage() {
-  const [coordsFromMapDetail, setcoordsFromMapDetail] = useState<[number, number][]>([[-17.41047981158394, -66.29267798176957]]);
-  const handleReceivedCoords = (msg: [number, number][]) => {
+export default function MapPage({ params }: { params: { id: string } }) {
+  const [coordsFromMapDetail, setcoordsFromMapDetail] = useState<[number, number][]>([[0,0]]);
+  const [teacherFromMapDetail, setTeacherFromMapDetail] = useState<string[]>([""]);
+  const [dateFromMapDetail, setDateFromMapDetail] = useState<string[]>([""]);
+
+
+  const handleReceivedCoords = (msg: [number, number][], msg2: string[], msg3: string[]) => {
     setcoordsFromMapDetail(msg);
+    setTeacherFromMapDetail(msg2);
+    setDateFromMapDetail(msg3);
   };
+
   const { token, type } = getAuthDetails();
   const validToken = token ?? '';
   const validType = type ?? '';
@@ -29,10 +36,10 @@ export default function MapHistoryPage() {
       <div className='container-fluid'>
         <div className='row'>
           <div className='col-lg-4 bg-white shadow rounded'>
-            <CarMapDetail carToken={validToken} carType={validType} setcoords={handleReceivedCoords}/>
+            <CarSearch carToken={validToken} carType={validType} carId={params.id} setWayPoints={handleReceivedCoords}/>
           </div>
           <div className='col-lg-8 rounded'>
-            <MapComponent markers={coordsFromMapDetail}/>
+            <MapComponent markers={coordsFromMapDetail} dates={dateFromMapDetail} names={teacherFromMapDetail} />
           </div>
         </div>
       </div>

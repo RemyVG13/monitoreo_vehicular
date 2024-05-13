@@ -55,24 +55,20 @@ export interface MapCarDetail extends BaseContentElement{
   last_time:string;
 }
 
-/*{
-    "id": "660b2e4996c36ca01404f6e0",
-    "name": "CALDINA 2005ZTE",
-    "plate": "2005 ZTE",
-    "make": "TOYOTA",
-    "model": "CALDINA",
-    "year": 1999,
-    "thingspeak_id": 2425622,
-    "full_name": "TOYOTA CALDINA 1999 2005 ZTE",
-    "teacher_name": "Paola Vicario",
-    "longitude": -66.31427,
-    "latitude": -17.396368,
-    "fuel": 42.6,
-    "speed": 50,
-    "state": "Inactivo",
-    "zone": "Fuera de zona",
-    "teacher_id": "64c9e0f425576f886d74705f"
-}*/
+export interface Alarm extends BaseContentElement{
+  date: string;
+  hour: string;
+  reason: string;
+  teacher_name: string;
+  car_name:string;
+  thingspeak_id: number;
+}
+
+export interface HistoryData{
+  coords_list: [number,number][];
+  dates_list: string[];
+  teacher_name_list: string[]
+}
 export interface Schedule extends BaseContentElement{
   teacher_id: string;
   car_id: string;
@@ -90,7 +86,7 @@ export interface JWT {
 }
 
 export interface Column<T> {
-  key: keyof T;  // 'key' es una clave del tipo genérico T
-  label: string; // 'label' es el texto que se mostrará en la cabecera de la tabla
+  key: keyof T;
+  label: string;
 }
 

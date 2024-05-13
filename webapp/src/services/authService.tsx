@@ -30,11 +30,9 @@ export async function loginUser(username: string, password: string) {
                 "Access-Control-Allow-Headers": "*",
             }    
         });
-        // Asume éxito y extrae el token u otra info relevante de la respuesta
         return { success: true, message: 'Login successful', data: response.data };
     } catch (error) {
         console.log("Authentication => authenticate error: " + error);
-        // Ajusta la respuesta de error según la estructura de tus errores
         return { success: false, message: 'Login failed', data: null };
     }    
 }

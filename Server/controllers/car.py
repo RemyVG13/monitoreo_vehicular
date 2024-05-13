@@ -235,33 +235,7 @@ async def get_car_map_controller(id: str,userLogged: User):
         )
     
     car = await connection.cars.find_one({"_id": ObjectId(id)})
-    
-    carDataBase = {
-        "_id": id,
-        "name": car["name"],
-        "plate": car["plate"],
-        "make": car["make"],
-        "model": car["model"],
-        "year": car["year"],
-        "thingspeak_id": car["thingspeak_id"],
-        "full_name": f'{car["make"]} {car["model"]} {str(car["year"])} {car["plate"]}',
-        "teacher_name": "",
-        "longitude": 0,
-        "latitude":0,
-        "fuel": 0,
-        "speed": 0,
-        "state": "",
-        "zone": "",
-        "is_working": "",
-        "teacher_id": "",
-        "last_time": "",
-    }
-
-
-
     car_data = await get_car_data(car["thingspeak_id"],1)
-    print("car_data||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-    print(car_data)
     car["longitude"] = float(car_data[0]["longitude"])
     car["latitude"] = float(car_data[0]["latitude"])
     car["speed"] = float(car_data[0]["speed"])

@@ -8,19 +8,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
 
 interface MapComponentProps {
-  markers: [number, number][];  // Array de tuplas de latitud y longitud
+  markers: [number, number][];
+  names: string[];
+  dates: string[];
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({ markers }) => {
+const MapComponent: React.FC<MapComponentProps> = ({ markers, names, dates }) => {
   const [isClient, setIsClient] = useState(false);
   const size:number = 1
   useEffect(() => {
-    // Al montar el componente, actualiza el estado para indicar que está en el cliente
     setIsClient(true);
   }, []);
 
   if (!isClient) {
-    return null; // o algún placeholder mientras no se renderiza en el servidor
+    return null; 
   }
 
   const mapStyle = {
@@ -38,10 +39,10 @@ const MapComponent: React.FC<MapComponentProps> = ({ markers }) => {
   ];
 
   const carIcon = new L.Icon({
-    iconUrl: '/assets/icons_car.svg',  // Asegúrate de que la ruta es accesible desde la carpeta public
-    iconSize: [25, 25],  // Tamaño del icono, ajusta según sea necesario
-    iconAnchor: [12, 4],  // Punto del icono que corresponderá a la ubicación del marcador
-    popupAnchor: [1, -5],  // Punto desde donde se mostrará el popup relativo al icono
+    iconUrl: '/assets/icons_car.svg', 
+    iconSize: [25, 25], 
+    iconAnchor: [12, 4], 
+    popupAnchor: [1, -5],  
   });
 
   return (
@@ -56,7 +57,10 @@ const MapComponent: React.FC<MapComponentProps> = ({ markers }) => {
             {markers.map((position, index) => (
               <Marker key={index} position={position} icon={carIcon}>
                 <Popup>
-                  {position}
+                  {(markers[index][0].toFixed(6))}, {markers[index][1].toFixed(6)}
+                  <br />
+                  <b>Instructor: </b>{names[index]}<br/>
+                  <b>Fecha: </b> {dates[index]}
                 </Popup>
               </Marker>
             ))}

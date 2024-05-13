@@ -40,6 +40,17 @@ export const fetchMapCar = async (token: string, type: string, car_id: string) =
   }
 }
 
+export const fetchHistoryCar = async (token: string, type: string, car_id: string,startDate: string,endDate:string) => {
+  try {
+    const response = await apiclient.get(`cars/history/${car_id}/?start_date=${startDate}&end_date=${endDate}`, {
+      headers: configHeader(token, type),
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching history car:", error);
+    throw error;
+  }
+}
 
 export const deleteCar = async (token: string, type: string, car_id: string | null) => {
   try {

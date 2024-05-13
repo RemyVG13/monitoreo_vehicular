@@ -46,8 +46,7 @@ export default function CarsPage() {
     { key: 'plate', label: 'MATRÍCULA' },
     { key: 'make', label: 'MARCA' },
     { key: 'model', label: 'MODELO' },
-    { key: 'year', label: 'AÑO' },
-    //{ key: 'thingspeak_id', label: 'THINGSPEAK ID' },
+    { key: 'year', label: 'AÑO' }
   ];
 
   return (
