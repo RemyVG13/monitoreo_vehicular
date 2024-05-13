@@ -6,6 +6,7 @@ def alarmEntity(item) -> dict:
         "reason": item["reason"],
         "teacher_name": item["teacher_name"],
         "car_name": item["car_name"],
+        "thingspeak_id": item["thingspeak_id"],
         "disabled": item["disabled"],
         "creation_date_inseconds": item["creation_date_inseconds"],
         "creator_id": item["creator_id"],

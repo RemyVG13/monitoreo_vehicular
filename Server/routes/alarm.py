@@ -17,7 +17,7 @@ from fastapi.security import (
 from typing import Annotated
 from routes.authentication import get_user_disabled_current
 from controllers.alarm import (
-    create_alarm_controller,
+    create_geoalarm_controller,
     get_all_alarms_controller
 )
 
@@ -31,8 +31,11 @@ async def get_all_alarms(userLogged: User = Depends(get_user_disabled_current),s
 
 @alarm.post('/geo/')
 async def create_alarm(alarm: Alarm, userLogged: User = Depends(get_user_disabled_current)):
+    print("alarm")
     print(alarm)
-    #alarmjson = await create_alarm_controller(alarm,userLogged)
-    #return alarmEntity(dict(alarmjson))
+    alarmjson = await create_geoalarm_controller(alarm,userLogged)
+    print("alarmjson")
+    print(alarmjson)
+    return alarmEntity(dict(alarmjson))
 
 

@@ -106,3 +106,31 @@ def convert_to_bolivia_time(iso_date):
         date_str = date_str.replace(eng, esp)
 
     return date_str
+
+def get_bolivia_date_time():
+    # Bolivia is UTC-4
+    utc_offset = timedelta(hours=-4)
+    
+    # Get the current UTC time and adjust it to Bolivia's timezone
+    now_utc = datetime.utcnow()
+    now_bolivia = now_utc + utc_offset
+    
+    # Format the date and time
+    formatted_date = now_bolivia.strftime('%d de %B')  # e.g., "23 de Marzo"
+    formatted_time = now_bolivia.strftime('%I:%M %p')  # e.g., "02:45 PM"
+    
+    # Convert month from English to Spanish
+    spanish_months = {
+        "January": "Enero", "February": "Febrero", "March": "Marzo",
+        "April": "Abril", "May": "Mayo", "June": "Junio",
+        "July": "Julio", "August": "Agosto", "September": "Septiembre",
+        "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
+    }
+    for eng, esp in spanish_months.items():
+        formatted_date = formatted_date.replace(eng, esp)
+    
+    # Return a dictionary with the date and time
+    return {
+        'date': formatted_date,
+        'time': formatted_time
+    }

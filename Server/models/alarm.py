@@ -8,6 +8,7 @@ class Alarm(BaseContent):
     reason: str
     teacher_name: str
     car_name: str
+    thingspeak_id: int
     class Config:  
         arbitrary_types_allowed=True
 
