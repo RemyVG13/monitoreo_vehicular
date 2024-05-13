@@ -31,7 +31,7 @@ async def get_all_alarms(userLogged: User = Depends(get_user_disabled_current),s
 
 @alarm.post('/geo/', response_model=Alarm)
 async def create_alarm(alarm: Alarm, userLogged: User = Depends(get_user_disabled_current)):
-    print
+    print(alarm)
     alarmjson = await create_alarm_controller(alarm,userLogged)
     return alarmEntity(dict(alarmjson))
 

@@ -116,6 +116,3 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         "access_token": access_token_jwt,
         "token_type": "bearer"
     }
-
-
-
