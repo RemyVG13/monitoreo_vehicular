@@ -9,6 +9,7 @@ from scripts.time import (bolivia_datetime_seconds,
                           get_current_weekday_in_bolivia,
                           get_current_time_in_bolivia_seconds
                           )
+from scripts.whatsapp_sender import send_whatsapp_message
 from bson import ObjectId
 from bson.regex import Regex
 
@@ -43,6 +44,11 @@ def verify_getter_rol(getter: User):
     return {"response": True, "detail": "Ok"}
 
 #CRUD functions
+account_sid = 'ACe66736f6da40edba30331fb54a6a04d6'
+auth_token = '05fc2db93f3f170d96ad4f44bbd4c1f8'
+from_whatsapp_number = '+14155238886'
+to_whatsapp_number = '+59161680104'
+
 async def create_geoalarm_controller(alarm : Alarm, userLogged : User ):
     vrf = verify_creator_rol(userLogged)    
     if (not vrf["response"]):
@@ -95,6 +101,12 @@ async def create_geoalarm_controller(alarm : Alarm, userLogged : User ):
     id = res.inserted_id
     await connection.alarms.update_one({"_id": ObjectId(id)}, {"$set": {"id":str(id)}})
     alarmdb = await connection.alarms.find_one({"_id": id})
+    
+    if dict_alarm["teacher_name"] != "Sin instructor":
+        message = f'*{dict_alarm["date"]}, {dict_alarm["hour"]}*\nEl auto {car["name"]} a cargo de {dict_alarm["teacher_name"]} salió del área de enseñanza.\nRevisa el sistema de monitoreo para mas detalles'
+    else:
+        message = f'*{dict_alarm["date"]}, {dict_alarm["hour"]}*\nEl auto {car["name"]} salió del área de enseñanza.\nRevisa el sistema de monitoreo para mas detalles'
+    send_whatsapp_message(account_sid, auth_token, from_whatsapp_number, to_whatsapp_number, message)
     return alarmdb  
 
 async def create_fuelalarm_controller(alarm : Alarm, userLogged : User ):
@@ -110,7 +122,7 @@ async def create_fuelalarm_controller(alarm : Alarm, userLogged : User ):
     actual_weekday = get_current_weekday_in_bolivia()
 
     dict_alarm["date"] = actual_time["date"]
-    dict_alarm["time"] = actual_time["time"]
+    dict_alarm["hour"] = actual_time["time"]
     dict_alarm["reason"] = "Combustible"
 
     car = await connection.cars.find_one({"thingspeak_id":dict_alarm["thingspeak_id"]})
@@ -149,6 +161,13 @@ async def create_fuelalarm_controller(alarm : Alarm, userLogged : User ):
     id = res.inserted_id
     await connection.alarms.update_one({"_id": ObjectId(id)}, {"$set": {"id":str(id)}})
     alarmdb = await connection.alarms.find_one({"_id": id})
+    
+    if dict_alarm["teacher_name"] != "Sin instructor":
+        message = f'*{dict_alarm["date"]}, {dict_alarm["hour"]}*\nEl auto {car["name"]} a cargo de {dict_alarm["teacher_name"]} presenta un cambio brusco de combustible.\nRevisa el sistema de monitoreo para mas detalles'
+    else:
+        message = f'*{dict_alarm["date"]}, {dict_alarm["hour"]}*\nEl auto {car["name"]} presenta un cambio brusco de combustible.\nRevisa el sistema de monitoreo para mas detalles'
+    send_whatsapp_message(account_sid, auth_token, from_whatsapp_number, to_whatsapp_number, message)
+    
     return alarmdb  
 
 async def get_all_alarms_controller(userLogged: User,search:str):

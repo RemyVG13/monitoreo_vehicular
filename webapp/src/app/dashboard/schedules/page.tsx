@@ -28,17 +28,21 @@ export default function SchedulesPage() {
     }
   };
 
-  const handleDelete = async (scheduleId: string) => {
+  const handleDelete = async (deleteToken: string, deleteType: string,scheduleId: string | null) => {
+    
     try {
-      const response = await deleteSchedule(validToken, validType, scheduleId);
-      if (response.status === 'OK') {
-        handleSearch(""); // Refresh the list after deleting
-      }
+      const response = await deleteSchedule(deleteToken, deleteType, scheduleId);
+      console.log("SCHEDULE PAGE DELETE RESPONSE")
+      console.log(response)
+      handleSearch(""); // Refresh the list after deleting
+
     } catch (error) {
       console.error('Error deleting schedule:', error);
     }
   };
-
+  /**
+   
+   */
   const handleAdd = () => {
     router.push('/dashboard/schedules/create');
   };

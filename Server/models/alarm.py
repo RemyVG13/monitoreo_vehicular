@@ -1,6 +1,7 @@
 from enum import Enum
 from models.basecontent import BaseContent,UpdateBaseContent
 from typing import Union
+from pydantic import BaseModel
 
 class Alarm(BaseContent):
     date: str
@@ -20,3 +21,11 @@ class UpdateAlarm(UpdateBaseContent):
     car_name: Union[str, None] = None
     class Config:  
         arbitrary_types_allowed=True
+        
+class EmailRequest(BaseModel):
+    sender_email: str
+    sender_password: str
+    receiver_email: str
+    subject: str
+    body: str
+    attachment_path: str = None

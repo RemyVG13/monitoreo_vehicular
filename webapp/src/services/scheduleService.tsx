@@ -43,6 +43,9 @@ export const fetchSchedule = async (token: string, type: string, schedule_id: st
 
 export const deleteSchedule = async (token: string, type: string, schedule_id: string | null) => {
   try {
+    console.log("schedule token",token)
+    console.log("schedule type",type)
+    console.log("schedule id",schedule_id)
     const response = await apiclient.delete(`schedules/${schedule_id}`, {
       headers: configHeader(token, type),
     });

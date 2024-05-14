@@ -79,6 +79,11 @@ export interface Schedule extends BaseContentElement{
   hour_hhmm: string;
 }
 
+export interface Report{
+  car_name: string;
+  report_type: string;
+  report: [string,number][];
+}
 
 export interface JWT {
   token: string;
